@@ -2,11 +2,11 @@
 
 #pragma once
 
-#define DISTRHO_PLUGIN_NAME                 "Echomatica 1 3 1"
-#define DISTRHO_PLUGIN_URI                  "urn:hvcc:Echomatica_1_3_1"
-#define DISTRHO_PLUGIN_BRAND                "plugdata"
+#define DISTRHO_PLUGIN_NAME                 "Echomatica"
+#define DISTRHO_PLUGIN_URI                  "urn:hvcc:Echomatica"
+#define DISTRHO_PLUGIN_BRAND                "Mondomatic"
 
-#define DISTRHO_PLUGIN_CLAP_ID              "urn.hvcc.Echomatica_1_3_1"
+#define DISTRHO_PLUGIN_CLAP_ID              "urn.hvcc.Echomatica"
 #define DISTRHO_PLUGIN_NUM_INPUTS           2
 #define DISTRHO_PLUGIN_NUM_OUTPUTS          2
 #define DISTRHO_PLUGIN_IS_SYNTH             0

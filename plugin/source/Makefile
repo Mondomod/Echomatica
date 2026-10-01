@@ -1,4 +1,4 @@
-NAME = Echomatica_1_3_1
+NAME = Echomatica
 FILES_DSP = $(wildcard *.cpp)
 FILES_DSP += $(wildcard *.c)
 

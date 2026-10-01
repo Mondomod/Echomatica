@@ -1,8 +1,8 @@
 {
   "dpf": {
     "project": true,
-    "description": "Rename Me",
-    "maker": "plugdata",
+    "description": "Modelled after 1960s Italian Multi-tap Tape and Drum Echoes",
+    "maker": "Mondomatic",
     "license": "ISC",
     "midi_input": 0,
     "midi_output": 0,
