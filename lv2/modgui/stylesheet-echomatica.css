@@ -1,0 +1,357 @@
+
+
+/* SKINS */
+.mod-echobox{{{cns}}} {
+    border-radius: 20px;
+
+}
+
+.mod-echobox-meazzi{{{cns}}} {
+    background-image: url(/resources/panel/controlpanel0.png{{{ns}}});
+    background-position: center center;
+    background-repeat: no-repeat;
+    height: 259px;
+    position: relative;
+    width: 635px;
+}
+/* THE AUTHOR */
+.mod-echobox{{{cns}}} .mod-plugin-brand h1 {
+    bottom: 90px;
+    color: #fff;
+    font-size: 14px;
+    left: 54px;
+    line-height: 1;
+    margin: 0;
+    position: absolute;
+}
+
+/* PLUGIN'S NAME */
+.mod-echobox{{{cns}}} .mod-plugin-name h1 {
+    bottom: 60px;
+    color: #fff;
+    font-size: 18px;
+    left: 54px;
+    line-height: 1;
+    margin: 0;
+    position: absolute;
+}
+
+/* CONTROLS */
+.mod-echobox{{{cns}}} .mod-control-group {
+    bottom: 149px;
+    color: #000;
+    font-size: 10px;
+    height: 73px;
+	width: 400px;
+    left: 160px;
+    position: absolute;
+    top: 24px;
+}
+
+.mod-echobox{{{cns}}} .mod-control-group > div {
+    margin-right: 2px;
+}
+
+/* SWITCH ON/OFF GENERAL */
+.mod-echobox{{{cns}}} .mod-switch {
+    cursor: pointer;
+    height: 73px;
+    position: absolute;
+    width: 90px;
+	top: 180px;
+	left: 350px;
+}
+.mod-echobox{{{cns}}} .mod-switch2 {
+    cursor: pointer;
+    float: left; 
+    height: 73px;
+    position: relative;
+    width: 73px;
+}
+.mod-echobox{{{cns}}} .mod-switch3 {
+	display: none;
+/*    cursor: pointer;
+    float: left; 
+    height: 73px;
+    position: relative;
+    width: 73px; */
+}
+.mod-echobox{{{cns}}} .mod-switch-image {
+    background-image: url(/resources/switches/switchlight1.png{{{ns}}});
+    background-position: 0px 0px;
+  background-repeat: no-repeat;
+  background-size: auto 125px;
+  height: 65px;
+  width: 115px;
+  position: relative;
+  left: -33px;
+  top: -60px;
+}
+
+.mod-echobox{{{cns}}} .mod-switch-image2 {
+    background-image: url(/resources/switches/switchlight1.png{{{ns}}});
+    background-position: 0px 0px;
+	background-repeat: no-repeat;
+	background-size: 100px auto;
+	height: 50px;
+	width: 50px;
+}
+
+.mod-echobox{{{cns}}} .mod-switch-image.on {
+    background-position: 0px -65px;
+}
+.mod-echobox{{{cns}}} .mod-switch-image.off {
+    background-position: 0px 10px;
+}
+.mod-echobox{{{cns}}} .mod-switch-image2.on {
+    background-position: 0px -63px;
+}
+
+.mod-echobox{{{cns}}} .mod-switch-image2.off {
+    background-position: 0px 0px;
+}
+
+
+/* Cupcake w/ Pointer */
+.mod-echobox{{{cns}}} .mod-cupcake {
+    float: left;
+    height: 90px;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+    width: 80px;
+}
+.mod-echobox{{{cns}}} .mod-cupcake-switch {
+	float: right;
+	height: 60px;
+	position: relative;
+	width: 56px;
+	right: -47px;
+	top: 22px;
+}
+.mod-echobox{{{cns}}} .mod-cupcake .mod-cupcake-image {
+    background-image: url(/resources/knobs/cupcake-pointer/_strip.png{{{ns}}});
+    background-position: left 0px;
+    background-repeat: no-repeat;
+    background-size: auto 80px;
+    height: 73px;
+    margin-top: 3px;
+    position: relative;
+    width: 80px;
+    z-index: 2;
+}
+
+.mod-echobox{{{cns}}} .mod-cupcake .mod-cupcake-title {
+    font-family: Impact !important;
+    font-size: 14px;
+    font-weight: bold;
+	color: #9f916b;
+    left: 0;
+    position: absolute;
+    right: 0;
+    text-transform: uppercase;
+    top: 75px;
+    z-index: 1;
+}
+
+/* ENUMERATED LIST */
+.mod-echobox{{{cns}}} .mod-enumerated {
+	color: #D0ED0E;
+	text-shadow: 0 0 8px #ff4da6;
+    display: inline-block;
+    overflow: hidden;
+    position: absolute;
+    left: -126px;
+    top: 10px;
+    width: 176px;
+}
+
+.mod-echobox{{{cns}}} .mod-enumerated  > div:hover {
+    cursor: pointer;
+}
+
+.mod-echobox{{{cns}}} .mod-enumerated .mod-enumerated-selected {
+    background: rgba(27, 79, 8,.85);
+    border-radius: 4px;
+    box-shadow:inset 1px 1px 10px #28780B;
+    font-size: 14px;
+    height: 34px;
+    line-height: 2.5;
+    margin-right: 0px;
+    overflow: hidden;
+    padding: 0 9px;
+}
+
+/* WHEN IS HOVER */
+.mod-echobox{{{cns}}} .mod-enumerated:hover .mod-enumerated-selected {
+    border-radius: 4px 4px 0 0;
+}
+
+/* THE LIST OF OPTIONS */
+.mod-echobox{{{cns}}} .mod-enumerated .mod-enumerated-list {
+    background: rgba(27, 79, 8,.85);
+    display: none;
+    font-weight: bold;
+    height: 69px;
+    overflow: auto;
+    position: relative;
+    width: 200px;
+    z-index: 3;
+}
+
+.mod-echobox{{{cns}}} .mod-enumerated .mod-enumerated-list > div {
+    padding: 3px 9px;
+}
+
+.mod-echobox{{{cns}}} .mod-enumerated .mod-enumerated-list > div:hover {
+    background: rgba(0,0,0,.35);
+    cursor: pointer;
+}
+
+/* VARISPEED BOX */
+.mod-echobox{{{cns}}} .mod-varispeed {
+    cursor: pointer;
+	float: none !important;
+	width: 150px;
+	position: absolute !important;
+	right: -50px !important;
+    }
+	
+	/*  2 knob layout */
+.mod-echobox{{{cns}}} .echobox-knobs {
+	position: absolute !important;
+	width: 180px !important;
+	left: 68px !important;
+	top: 87px !important;
+}
+
+.mod-echobox{{{cns}}} .echobox-row {
+	margin: auto;
+}
+
+.mod-echobox{{{cns}}} .echobox-left-div {
+	width: 80px;
+	height: 73px !important;
+}
+
+.mod-echobox{{{cns}}} .echobox-right-div {
+	width: 80px; 
+	height: 73px !important;
+	left: 35px;
+}
+
+.mod-echobox{{{cns}}} .echobox-left-div   > div:hover {
+    cursor: pointer;
+}
+.mod-echobox{{{cns}}} .echobox-right-div  > div:hover {
+    cursor: pointer;
+}
+
+/* head indicator panel      */
+.mod-echobox{{{cns}}} .echobox-indicatorpanel { 
+	width: 170px;
+	height: 60px;
+	position: absolute;
+	top: 117px;
+	left: -105px;
+}
+	
+.mod-echobox{{{cns}}} .echobox-ind-align {
+	display: flex;
+	justify-content: center;
+	}
+	
+.mod-echobox{{{cns}}} .echobox-head-on {
+    background-image: url(/resources/panel/indicators.png{{{ns}}});
+    background-repeat: no-repeat;
+	background-size: auto 45px;
+    height: 41px;
+    width: 27px;
+	float: left;
+	background-position: -67.5px -3px;
+}
+.mod-echobox{{{cns}}} .echobox-head-off {
+    background-image: url(/resources/panel/indicators.png{{{ns}}});
+    background-repeat: no-repeat;
+	background-size: auto 45px;
+    height: 41px;
+    width: 27px;
+	float: left;
+	background-position: -35px -3px; 
+
+}
+.mod-echobox{{{cns}}} .echobox-head-feed-on {
+    background-image: url(/resources/panel/indicators.png{{{ns}}});
+    background-repeat: no-repeat;
+	background-size: auto 45px;
+    height: 19px;
+    width: 27px;
+	float: left;
+	background-position: -1px -4px; 
+
+}
+.mod-echobox{{{cns}}} .echobox-head-feed-off {
+    background-image: url(/resources/panel/indicators.png{{{ns}}});
+    background-repeat: no-repeat;
+	background-size: auto 45px;
+    height: 19px;
+    width: 27px;
+	float: left;
+	background-position: -1px -25px; 
+
+}
+
+.mod-echobox{{{cns}}}	.heads0, .heads1, .heads2, .heads3, .heads4, .heads5 , .heads6, .heads7, .heads8, .heads9, .heads10, .heads11, .heads12 , .heads13, .heads14, .heads15 {
+  display: none;
+}
+
+.mode-0 .heads0 { display: flex; width: 160px; justify-content: center; flex-wrap: wrap; left: -120px;}
+.mode-1 .heads1 { display: flex; width: 160px; justify-content: center; flex-wrap: wrap; left: -120px;}
+.mode-2 .heads2 { display: flex; width: 160px; justify-content: center; flex-wrap: wrap; left: -120px;}
+.mode-3 .heads3 { display: flex; width: 160px; justify-content: center; flex-wrap: wrap; left: -120px;}
+.mode-4 .heads4 { display: flex; width: 160px; justify-content: center; flex-wrap: wrap; left: -120px;}
+.mode-5 .heads5 { display: flex; width: 160px; justify-content: center; flex-wrap: wrap; left: -120px;}
+.mode-6 .heads6 { display: flex; width: 130px; justify-content: center; flex-wrap: wrap; }
+.mode-7 .heads7 { display: flex; width: 130px; justify-content: center; flex-wrap: wrap; }
+.mode-8 .heads8 { display: flex; width: 130px; justify-content: center; flex-wrap: wrap; }
+.mode-9 .heads9 { display: flex; width: 162px; justify-content: center; flex-wrap: wrap; left: -120px;}
+.mode-10 .heads10 { display: flex; width: 162px; justify-content: center; flex-wrap: wrap; left: -120px;}
+.mode-11 .heads11 { display: flex; width: 160px; justify-content: center; flex-wrap: wrap; left: -120px;}
+.mode-12 .heads12 { display: flex; width: 160px; justify-content: center; flex-wrap: wrap; left: -120px;}
+.mode-13 .heads13 { display: flex; width: 160px; justify-content: center; flex-wrap: wrap; left: -120px;}
+.mode-14 .heads14 { display: flex; width: 160px; justify-content: center; flex-wrap: wrap; left: -120px;}
+.mode-15 .heads15 { display: flex; width: 160px; justify-content: center; flex-wrap: wrap; left: -120px;}
+
+
+/*     Feedback Mode Control    */
+
+.mod-echobox{{{cns}}} .mod-enumerated-halo {
+	position: absolute;
+	width: 140px !important;
+	height: 40px !important;
+	left: 93px;
+	top: 16px;
+	font-size: 0;
+}
+
+.mod-echobox{{{cns}}} .halo-button {    
+	background-image: url(/resources/switches/halo_buttons.png{{{ns}}});
+    background-repeat: no-repeat;
+	background-size: auto 40px;
+	height: 40px;
+	width: 65px;
+	padding: 3px;
+	background-position: -3px 0px;
+	}
+	
+.mod-echobox{{{cns}}} .halo-button.selected {
+	background-position: -56px 0px; 
+}
+ .mod-echobox{{{cns}}} .halo-button > div:hover {
+    cursor: pointer;
+}
+
+.mod-echobox{{{cns}}} .mod-enumerated-list-halo {
+   display: flex !important;
+}
+

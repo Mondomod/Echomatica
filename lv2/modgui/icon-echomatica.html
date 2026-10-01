@@ -1,0 +1,351 @@
+<div class="mod-pedal mod-echobox{{{cns}}} mod-echobox-meazzi{{{cns}}}">
+  <div mod-role="drag-handle" class="mod-drag-handle"></div>
+  <div class="mod-control-group clearfix">
+     <!-- Tapehead Mode -->
+	 {{#controls.3}}
+    <div id="modes" class="mod-enumerated clearfix" mod-role="input-control-port" mod-port-symbol="{{symbol}}" mod-widget="custom-select"> 
+	<div   mod-role="input-control-value"   mod-port-symbol="{{symbol}}"   class="mod-enumerated-selected" ></div>
+      <div class="mod-enumerated-list">
+        {{#scalePoints}}
+        <div mod-role="enumeration-option" mod-port-value="{{value}}">
+          {{label}}
+        </div>
+        {{/scalePoints}}
+      </div>
+	</div>
+	 {{/controls.3}}
+    <!-- Feedback Mode -->
+	 {{#controls.6}}
+    <div class="mod-enumerated-halo" mod-role="input-control-port" mod-port-symbol="fdbck_mode" mod-widget="custom-select">
+      <div class="mod-enumerated-list-halo">
+	   <div mod-role="input-control-value" mod-port-symbol="{{symbol}}" class="mod-enumerated-selected"></div>
+        <div class="halo-button" mod-role="enumeration-option" mod-port-value="0"></div>
+        <div class="halo-button" mod-role="enumeration-option" mod-port-value="1" ></div>
+        <div class="halo-button" mod-role="enumeration-option" mod-port-value="2" ></div>
+      </div>
+    </div>
+	{{/controls.6}}
+    <!--  Varispeed  -->
+	{{#controls.4}}
+    <div class="mod-varispeed">
+      <div class="mod-cupcake" title="{{comment}}">
+        <div class="mod-cupcake-image" mod-role="input-control-port" mod-port-symbol="varispeed"></div>
+      </div> 
+	</div>
+	{{/controls.4}}
+	{{#controls.5}}
+    <div class="mod-cupcake-switch">
+        <div class="mod-switch-image2" mod-role="input-control-port" mod-port-symbol="varispeed_enable" mod-widget="switch"></div>
+	</div>
+	{{/controls.5}}
+    <!-- Head Indicator Panels   -->
+    <div class="echobox-indicatorpanel heads0">
+      <div class="echobox-ind-align">
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+      </div>
+      <div class="echobox-ind-align">
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-on"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+      </div>
+    </div>
+    <div class="echobox-indicatorpanel heads1">
+      <div class="echobox-ind-align">
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-off"></div>
+        <div class="echobox-head-off"></div>
+        <div class="echobox-head-on"></div>
+      </div>
+      <div class="echobox-ind-align">
+        <div class="echobox-head-feed-on"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+      </div>
+    </div>
+    <div class="echobox-indicatorpanel heads2">
+      <div class="echobox-ind-align">
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-off"></div>
+        <div class="echobox-head-on"></div>
+      </div>
+      <div class="echobox-ind-align">
+        <div class="echobox-head-feed-on"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+      </div>
+    </div>
+    <div class="echobox-indicatorpanel heads3">
+      <div class="echobox-ind-align">
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-off"></div>
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+      </div>
+      <div class="echobox-ind-align">
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-on"></div>
+        <div class="echobox-head-feed-off"></div>
+      </div>
+    </div>
+    <div class="echobox-indicatorpanel heads4">
+      <div class="echobox-ind-align">
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-off"></div>
+        <div class="echobox-head-off"></div>
+        <div class="echobox-head-off"></div>
+        <div class="echobox-head-off"></div>
+      </div>
+      <div class="echobox-ind-align">
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-on"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+      </div>
+    </div>
+    <div class="echobox-indicatorpanel heads5">
+      <div class="echobox-ind-align">
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+      </div>
+      <div class="echobox-ind-align">
+        <div class="echobox-head-feed-on"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+      </div>
+    </div>
+    <div class="echobox-indicatorpanel heads6">
+      <div class="echobox-ind-align">
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+      </div>
+      <div class="echobox-ind-align">
+        <div class="echobox-head-feed-on"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+      </div>
+    </div>
+  <div class="echobox-indicatorpanel heads7">
+      <div class="echobox-ind-align">
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+      </div>
+      <div class="echobox-ind-align">
+        <div class="echobox-head-feed-on"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+      </div>
+    </div>
+  <div class="echobox-indicatorpanel heads8">
+      <div class="echobox-ind-align">
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-off"></div>
+      </div>
+      <div class="echobox-ind-align">
+        <div class="echobox-head-feed-on"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+      </div>
+    </div>
+    <div class="echobox-indicatorpanel heads9">
+      <div class="echobox-ind-align">
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+      </div>
+      <div class="echobox-ind-align">
+        <div class="echobox-head-feed-on"></div>
+        <div class="echobox-head-feed-on"></div>
+        <div class="echobox-head-feed-on"></div>
+        <div class="echobox-head-feed-on"></div>
+        <div class="echobox-head-feed-on"></div>
+        <div class="echobox-head-feed-on"></div>
+      </div>
+    </div>
+    <div class="echobox-indicatorpanel heads10">
+      <div class="echobox-ind-align">
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-off"></div>
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-off"></div>
+        <div class="echobox-head-off"></div>
+        <div class="echobox-head-on"></div>
+      </div>
+      <div class="echobox-ind-align">
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-on"></div>
+        <div class="echobox-head-feed-off"></div>
+      </div>
+    </div>
+    <div class="echobox-indicatorpanel heads11">
+      <div class="echobox-ind-align">
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-off"></div>
+        <div class="echobox-head-off"></div>
+        <div class="echobox-head-off"></div>
+      </div>
+      <div class="echobox-ind-align">
+        <div class="echobox-head-feed-on"></div>
+        <div class="echobox-head-feed-on"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+      </div>
+    </div>
+    <div class="echobox-indicatorpanel heads12">
+      <div class="echobox-ind-align">
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-off"></div>
+        <div class="echobox-head-off"></div>
+      </div>
+      <div class="echobox-ind-align">
+        <div class="echobox-head-feed-on"></div>
+        <div class="echobox-head-feed-on"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+      </div>
+    </div>
+    <div class="echobox-indicatorpanel heads13">
+      <div class="echobox-ind-align">
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-off"></div>
+        <div class="echobox-head-off"></div>
+        <div class="echobox-head-off"></div>
+        <div class="echobox-head-on"></div>
+      </div>
+      <div class="echobox-ind-align">
+        <div class="echobox-head-feed-on"></div>
+        <div class="echobox-head-feed-on"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+      </div>
+    </div>
+    <div class="echobox-indicatorpanel heads14">
+      <div class="echobox-ind-align">
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-off"></div>
+        <div class="echobox-head-off"></div>
+        <div class="echobox-head-on"></div>
+      </div>
+      <div class="echobox-ind-align">
+        <div class="echobox-head-feed-on"></div>
+        <div class="echobox-head-feed-on"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+      </div>
+    </div>
+    <div class="echobox-indicatorpanel heads15">
+      <div class="echobox-ind-align">
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-on"></div>
+        <div class="echobox-head-off"></div>
+      </div>
+      <div class="echobox-ind-align">
+        <div class="echobox-head-feed-on"></div>
+        <div class="echobox-head-feed-on"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+        <div class="echobox-head-feed-off"></div>
+      </div>
+    </div>
+    <!--  End Head Indicator Panels -->
+
+    <!--  Knobs   -->
+    <div class="echobox-knobs">
+      <div class="echobox-row">
+		{{#controls.0}}
+        <div class="mod-cupcake echobox-left-div" title="{{comment}}">
+          <div class="mod-cupcake-image" mod-role="input-control-port" mod-port-symbol="echo"></div>
+        </div>
+		{{/controls.0}}
+		{{#controls.1}}
+        <div class="mod-cupcake echobox-right-div">
+          <div class="mod-cupcake-image" mod-role="input-control-port" mod-port-symbol="feedback"></div>
+        </div>
+		{{/controls.1}}
+      </div>
+    </div>
+    <!-- Bypass switch -->
+    <div class="mod-switch" mod-role="bypass">
+      <div class="mod-switch-image" mod-role="bypass-light"></div>
+    </div>
+  </div>
+
+  <!-- Start of inputs -->
+  <div class="mod-pedal-input">
+    {{#effect.ports.audio.input}}
+    <div class="mod-input mod-input-disconnected" title="{{name}}" mod-role="input-audio-port" mod-port-symbol="{{symbol}}">
+	<div class="mod-pedal-input-image"></div>
+   </div>
+    {{/effect.ports.audio.input}} {{#effect.ports.midi.input}}
+    <div class="mod-input mod-input-disconnected" title="{{name}}" mod-role="input-midi-port" mod-port-symbol="{{symbol}}">
+	<div class="mod-pedal-input-image"></div>
+    </div>
+    {{/effect.ports.midi.input}} {{#effect.ports.cv.input}}
+    <div class="mod-input mod-input-disconnected" title="{{name}}" mod-role="input-cv-port" mod-port-symbol="{{symbol}}">
+	<div class="mod-pedal-input-image"></div>
+    </div>
+    {{/effect.ports.cv.input}}
+  </div>
+  <div class="mod-pedal-output">
+    {{#effect.ports.audio.output}}
+    <div class="mod-output mod-output-disconnected" title="{{name}}" mod-role="output-audio-port" mod-port-symbol="{{symbol}}">
+	<div class="mod-pedal-output-image"></div>
+    </div>
+    {{/effect.ports.audio.output}} {{#effect.ports.midi.output}}
+    <div class="mod-output mod-output-disconnected" title="{{name}}" mod-role="output-midi-port" mod-port-symbol="{{symbol}}">
+	<div class="mod-pedal-output-image"></div>
+    </div>
+    {{/effect.ports.midi.output}} {{#effect.ports.cv.output}}
+    <div class="mod-output mod-output-disconnected" title="{{name}}" mod-role="output-cv-port" mod-port-symbol="{{symbol}}">
+	<div class="mod-pedal-output-image"></div>
+    </div>
+    {{/effect.ports.cv.output}}
+  </div>
+</div>
+

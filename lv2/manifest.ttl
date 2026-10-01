@@ -1,0 +1,86 @@
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix pset: <http://lv2plug.in/ns/ext/presets#> .
+
+<urn:hvcc:Echomatica>
+    a lv2:Plugin ;
+    lv2:binary <Echomatica_dsp.so> ;
+    rdfs:seeAlso <Echomatica_dsp.ttl>, <modgui.ttl> .
+
+<Apache.ttl>
+	lv2:appliesTo <urn:hvcc:Echomatica> ;
+	a pset:Preset ;
+	rdfs:seeAlso <Apache.ttl> .
+<Atlantis.ttl>
+	lv2:appliesTo <urn:hvcc:Echomatica> ;
+	a pset:Preset ;
+	rdfs:seeAlso <Atlantis.ttl> .
+<Brazil.ttl>
+	lv2:appliesTo <urn:hvcc:Echomatica> ;
+	a pset:Preset ;
+	rdfs:seeAlso <Brazil.ttl> .
+<Dance_On.ttl>
+	lv2:appliesTo <urn:hvcc:Echomatica> ;
+	a pset:Preset ;
+	rdfs:seeAlso <Dance_On.ttl> .
+<Fandango.ttl>
+	lv2:appliesTo <urn:hvcc:Echomatica> ;
+	a pset:Preset ;
+	rdfs:seeAlso <Fandango.ttl> .
+<FBI.ttl>
+	lv2:appliesTo <urn:hvcc:Echomatica> ;
+	a pset:Preset ;
+	rdfs:seeAlso <FBI.ttl> .
+<Find_Me_a_Golden_St_.ttl>
+	lv2:appliesTo <urn:hvcc:Echomatica> ;
+	a pset:Preset ;
+	rdfs:seeAlso <Find_Me_a_Golden_St_.ttl> .
+<Frightened_City.ttl>
+	lv2:appliesTo <urn:hvcc:Echomatica> ;
+	a pset:Preset ;
+	rdfs:seeAlso <Frightened_City.ttl> .
+<Geronimo.ttl>
+	lv2:appliesTo <urn:hvcc:Echomatica> ;
+	a pset:Preset ;
+	rdfs:seeAlso <Geronimo.ttl> .
+<Gonzales.ttl>
+	lv2:appliesTo <urn:hvcc:Echomatica> ;
+	a pset:Preset ;
+	rdfs:seeAlso <Gonzales.ttl> .
+<Kon_Tiki.ttl>
+	lv2:appliesTo <urn:hvcc:Echomatica> ;
+	a pset:Preset ;
+	rdfs:seeAlso <Kon_Tiki.ttl> .
+<Lost_City.ttl>
+	lv2:appliesTo <urn:hvcc:Echomatica> ;
+	a pset:Preset ;
+	rdfs:seeAlso <Lost_City.ttl> .
+<Midnight.ttl>
+	lv2:appliesTo <urn:hvcc:Echomatica> ;
+	a pset:Preset ;
+	rdfs:seeAlso <Midnight.ttl> .
+<Peace_Pipe.ttl>
+	lv2:appliesTo <urn:hvcc:Echomatica> ;
+	a pset:Preset ;
+	rdfs:seeAlso <Peace_Pipe.ttl> .
+<Rise_Fall_of_Flingel_Bunt.ttl>
+	lv2:appliesTo <urn:hvcc:Echomatica> ;
+	a pset:Preset ;
+	rdfs:seeAlso <Rise_Fall_of_Flingel_Bunt.ttl> .
+<Sleepwalk.ttl>
+	lv2:appliesTo <urn:hvcc:Echomatica> ;
+	a pset:Preset ;
+	rdfs:seeAlso <Sleepwalk.ttl> .
+<The_Savage.ttl>
+	lv2:appliesTo <urn:hvcc:Echomatica> ;
+	a pset:Preset ;
+	rdfs:seeAlso <The_Savage.ttl> .
+<The_Stranger.ttl>
+	lv2:appliesTo <urn:hvcc:Echomatica> ;
+	a pset:Preset ;
+	rdfs:seeAlso <The_Stranger.ttl> .
+<Wonderful_Land.ttl>
+	lv2:appliesTo <urn:hvcc:Echomatica> ;
+	a pset:Preset ;
+	rdfs:seeAlso <Wonderful_Land.ttl> .
+

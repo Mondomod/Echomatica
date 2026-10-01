@@ -1,0 +1,48 @@
+@prefix kx:     <http://kxstudio.sf.net/ns/lv2ext/external-ui#> .
+@prefix modgui: <http://moddevices.com/ns/modgui#> .
+@prefix lv2:    <http://lv2plug.in/ns/lv2core#> .
+@prefix ui:    <http://lv2plug.in/ns/extensions/ui#> .
+
+<urn:hvcc:Echomatica>
+    modgui:gui [
+        modgui:resourcesDirectory <modgui> ;
+        modgui:iconTemplate <modgui/icon-echomatica.html> ;
+        modgui:stylesheet <modgui/stylesheet-echomatica.css> ;
+        modgui:screenshot <modgui/screenshot-echomatica.png> ;
+        modgui:thumbnail <modgui/thumbnail-echomatica.png> ;
+	 modgui:javascript <modgui/headmode.js> ;
+        modgui:brand "MondoMatic" ;
+        modgui:label "Echomatica" ;
+        modgui:model "panel" ;
+        modgui:panel "800" ;
+        modgui:knob "_strip" ;
+        modgui:port [
+            lv2:index 0 ;
+            lv2:symbol "dry" ;
+            lv2:name "dry" ;
+        ] , [
+            lv2:index 1 ;
+            lv2:symbol "echo" ;
+            lv2:name "echo" ;
+        ] , [
+            lv2:index 2 ;
+            lv2:symbol "feedback" ;
+            lv2:name "feedback" ;
+        ] , [
+            lv2:index 3 ;
+            lv2:symbol "tapehead_mode" ;
+            lv2:name "tapehead mode" ;
+        ] , [
+            lv2:index 4 ;
+            lv2:symbol "varispeed" ;
+            lv2:name "variSpeed" ;
+        ] , [
+            lv2:index 5 ;
+            lv2:symbol "varispeed_enable" ;
+            lv2:name "variSpeed enable" ;
+        ] , [
+            lv2:index 6 ;
+            lv2:symbol "fdbck_mode" ;
+            lv2:name "feedback mode" ;
+        ] ;
+    ] .
