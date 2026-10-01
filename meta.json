@@ -1,0 +1,14 @@
+{
+  "dpf": {
+    "project": true,
+    "description": "Rename Me",
+    "maker": "plugdata",
+    "license": "ISC",
+    "midi_input": 0,
+    "midi_output": 0,
+    "plugin_formats": [
+      "lv2_sep"
+    ]
+  },
+  "nosimd": false
+}
