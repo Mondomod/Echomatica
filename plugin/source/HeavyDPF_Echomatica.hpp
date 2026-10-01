@@ -9,7 +9,7 @@
 
 START_NAMESPACE_DISTRHO
 
-#define HV_DPF_NUM_PARAMETER 9
+#define HV_DPF_NUM_PARAMETER 7
 
 static void hvSendHookFunc(HeavyContextInterface *c, const char *sendName, uint32_t sendHash, const HvMessage *m);
 static void hvPrintHookFunc(HeavyContextInterface *c, const char *printLabel, const char *msgString, const HvMessage *m);
@@ -20,9 +20,7 @@ public:
   enum Parameters
   {
       paramdry,
-      paramdrymod,
       paramecho,
-      paramechomod,
       paramfdbck_mode,
       paramfeedback,
       paramtapehead_mode,

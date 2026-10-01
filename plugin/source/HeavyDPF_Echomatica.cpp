@@ -77,16 +77,14 @@ HeavyDPF_Echomatica::HeavyDPF_Echomatica()
 {
   
   _parameters[0] = 1.0f;
-  _parameters[1] = 1.0f;
-  _parameters[2] = 0.5f;
-  _parameters[3] = 0.0f;
-  _parameters[4] = 0.0f;
+  _parameters[1] = 0.5f;
+  _parameters[2] = 0.0f;
+  _parameters[3] = 0.5f;
+  _parameters[4] = 1.0f;
   _parameters[5] = 0.5f;
-  _parameters[6] = 1.0f;
-  _parameters[7] = 0.5f;
-  _parameters[8] = 0.0f;
+  _parameters[6] = 0.0f;
 
-  _context = hv_Echomatica_new_with_options(getSampleRate(), 10, 9, 2);
+  _context = hv_Echomatica_new_with_options(getSampleRate(), 10, 7, 2);
   _context->setUserData(this);
   _context->setSendHook(&hvSendHookFunc);
   _context->setPrintHook(&hvPrintHookFunc);
@@ -117,15 +115,6 @@ void HeavyDPF_Echomatica::initParameter(uint32_t index, Parameter& parameter)
         parameter.ranges.def = 1.0f;
         break;
     
-      case paramdrymod:
-        parameter.name = "drymod";
-        parameter.symbol = "drymod";
-        parameter.hints = kParameterIsAutomatable;
-        parameter.ranges.min = 0.5f;
-        parameter.ranges.max = 2.0f;
-        parameter.ranges.def = 1.0f;
-        break;
-    
       case paramecho:
         parameter.name = "echo";
         parameter.symbol = "echo";
@@ -133,15 +122,6 @@ void HeavyDPF_Echomatica::initParameter(uint32_t index, Parameter& parameter)
         parameter.ranges.min = 0.0f;
         parameter.ranges.max = 1.0f;
         parameter.ranges.def = 0.5f;
-        break;
-    
-      case paramechomod:
-        parameter.name = "echomod";
-        parameter.symbol = "echomod";
-        parameter.hints = kParameterIsAutomatable;
-        parameter.ranges.min = 0.0f;
-        parameter.ranges.max = 1.0f;
-        parameter.ranges.def = 0.0f;
         break;
     
       case paramfdbck_mode:
@@ -214,54 +194,40 @@ void HeavyDPF_Echomatica::setParameterValue(uint32_t index, float value)
     
     case 1: {
       _context->sendFloatToReceiver(
-        Heavy_Echomatica::Parameter::In::DRYMOD,
+        Heavy_Echomatica::Parameter::In::ECHO,
         value);
       break;
     }
     
     case 2: {
       _context->sendFloatToReceiver(
-        Heavy_Echomatica::Parameter::In::ECHO,
+        Heavy_Echomatica::Parameter::In::FDBCK_MODE,
         value);
       break;
     }
     
     case 3: {
       _context->sendFloatToReceiver(
-        Heavy_Echomatica::Parameter::In::ECHOMOD,
+        Heavy_Echomatica::Parameter::In::FEEDBACK,
         value);
       break;
     }
     
     case 4: {
       _context->sendFloatToReceiver(
-        Heavy_Echomatica::Parameter::In::FDBCK_MODE,
+        Heavy_Echomatica::Parameter::In::TAPEHEAD_MODE,
         value);
       break;
     }
     
     case 5: {
       _context->sendFloatToReceiver(
-        Heavy_Echomatica::Parameter::In::FEEDBACK,
-        value);
-      break;
-    }
-    
-    case 6: {
-      _context->sendFloatToReceiver(
-        Heavy_Echomatica::Parameter::In::TAPEHEAD_MODE,
-        value);
-      break;
-    }
-    
-    case 7: {
-      _context->sendFloatToReceiver(
         Heavy_Echomatica::Parameter::In::VARISPEED,
         value);
       break;
     }
     
-    case 8: {
+    case 6: {
       _context->sendFloatToReceiver(
         Heavy_Echomatica::Parameter::In::VARISPEED_ENABLE,
         value);
@@ -387,7 +353,7 @@ void HeavyDPF_Echomatica::sampleRateChanged(double newSampleRate)
 {
   hv_Echomatica_free(_context);
 
-  _context = hv_Echomatica_new_with_options(getSampleRate(), 10, 9, 2);
+  _context = hv_Echomatica_new_with_options(getSampleRate(), 10, 7, 2);
   _context->setUserData(this);
   _context->setSendHook(&hvSendHookFunc);
   _context->setPrintHook(&hvPrintHookFunc);
