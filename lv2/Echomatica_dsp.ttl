@@ -14,11 +14,6 @@
 @prefix spdx:  <http://spdx.org/rdf/terms#> .
 @prefix unit:  <http://lv2plug.in/ns/extensions/units#> .
 
-<urn:hvcc:Echomatica:group:mix_group>
-    a pg:Group ;
-    lv2:name "mix_group" ;
-    lv2:symbol "mix_group" .
-
 
 <urn:hvcc:Echomatica>
     a lv2:Plugin, lv2:DelayPlugin, doap:Project;
@@ -80,7 +75,6 @@
         lv2:minimum 0 ;
         lv2:maximum 1 ;
         lv2:portProperty lv2:toggled ;
-        pg group: <urn:hvcc:Echomatica:group:mix_group> ;
 
     ] ,
     [
@@ -91,7 +85,7 @@
         lv2:default 0.5 ;
         lv2:minimum 0 ;
         lv2:maximum 1 ;
-        pg group: <urn:hvcc:Echomatica:group:mix_group> ;
+
     ] ,
     [
         a lv2:InputPort, lv2:ControlPort ;
@@ -232,5 +226,5 @@
 		foaf:homepage <https://websites.umich.edu/~jauge/echomatica/> ;		
     ] ;
 
-    lv2:microVersion 6 ;
+    lv2:microVersion 5 ;
     lv2:minorVersion 1 .
