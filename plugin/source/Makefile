@@ -11,6 +11,8 @@ include ../../dpf/Makefile.plugins.mk
 BUILD_C_FLAGS += -Wno-unused-parameter -std=c11 -fno-strict-aliasing -pthread
 BUILD_CXX_FLAGS += -Wno-unused-parameter -fno-strict-aliasing -pthread
 LINK_FLAGS += -pthread
+BUILD_C_FLAGS += -DHV_SIMD_NONE
+BUILD_CXX_FLAGS += -DHV_SIMD_NONE
 
 ifeq ($(WINDOWS),true)
 	BUILD_CFLAGS += -Wa,-mbig-obj

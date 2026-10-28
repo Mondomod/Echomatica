@@ -4,7 +4,7 @@
 
 #define DISTRHO_PLUGIN_NAME                 "Echomatica"
 #define DISTRHO_PLUGIN_URI                  "urn:hvcc:Echomatica"
-#define DISTRHO_PLUGIN_BRAND                "Mondomatic"
+#define DISTRHO_PLUGIN_BRAND                "plugdata"
 
 #define DISTRHO_PLUGIN_CLAP_ID              "urn.hvcc.Echomatica"
 #define DISTRHO_PLUGIN_NUM_INPUTS           2

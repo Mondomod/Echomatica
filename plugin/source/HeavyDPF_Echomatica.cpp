@@ -337,6 +337,7 @@ void HeavyDPF_Echomatica::run(const float** inputs, float** outputs, uint32_t fr
 void HeavyDPF_Echomatica::run(const float** inputs, float** outputs, uint32_t frames)
 {
 #endif
+
   hostTransportEvents(frames);
 
   const TimePosition& timePos(getTimePosition());
