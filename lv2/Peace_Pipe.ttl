@@ -15,13 +15,13 @@
 		pset:value 1.0
 	] , [
 		lv2:symbol "echo" ;
-		pset:value 0.26897299
+		pset:value 0.20
 	] , [
 		lv2:symbol "fdbck_mode" ;
 		pset:value 0.0
 	] , [
 		lv2:symbol "feedback" ;
-		pset:value 0.36941999
+		pset:value 0.29
 	] , [
 		lv2:symbol "tapehead_mode" ;
 		pset:value 6.0

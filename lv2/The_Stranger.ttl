@@ -15,7 +15,7 @@
 		pset:value 1.0
 	] , [
 		lv2:symbol "echo" ;
-		pset:value 0.36272299
+		pset:value 0.22
 	] , [
 		lv2:symbol "fdbck_mode" ;
 		pset:value 0.0
