@@ -4,9 +4,13 @@
 
 <urn:hvcc:Echomatica>
     a lv2:Plugin ;
-    lv2:binary <Echomatica_dsp.so> ;
+    lv2:binary <Echomatica_dsp.dll> ;
     rdfs:seeAlso <Echomatica_dsp.ttl>, <modgui.ttl> .
 
+<Almost_a_Verb.ttl>
+	lv2:appliesTo <urn:hvcc:Echomatica> ;
+	a pset:Preset ;
+	rdfs:seeAlso <Almost_a_Verb.ttl> .
 <Apache.ttl>
 	lv2:appliesTo <urn:hvcc:Echomatica> ;
 	a pset:Preset ;
@@ -67,6 +71,10 @@
 	lv2:appliesTo <urn:hvcc:Echomatica> ;
 	a pset:Preset ;
 	rdfs:seeAlso <Rise_Fall_of_Flingel_Bunt.ttl> .
+<Slappy.ttl>
+	lv2:appliesTo <urn:hvcc:Echomatica> ;
+	a pset:Preset ;
+	rdfs:seeAlso <Slappy.ttl> .
 <Sleepwalk.ttl>
 	lv2:appliesTo <urn:hvcc:Echomatica> ;
 	a pset:Preset ;
