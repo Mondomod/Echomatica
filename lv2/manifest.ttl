@@ -7,10 +7,10 @@
     lv2:binary <Echomatica_dsp.dll> ;
     rdfs:seeAlso <Echomatica_dsp.ttl>, <modgui.ttl> .
 
-<Almost_a_Verb.ttl>
+<AlmostaVerb.ttl>
 	lv2:appliesTo <urn:hvcc:Echomatica> ;
 	a pset:Preset ;
-	rdfs:seeAlso <Almost_a_Verb.ttl> .
+	rdfs:seeAlso <AlmostaVerb.ttl> .
 <Apache.ttl>
 	lv2:appliesTo <urn:hvcc:Echomatica> ;
 	a pset:Preset ;
