@@ -251,5 +251,5 @@
 		foaf:homepage <https://websites.umich.edu/~jauge/echomatica/> ;		
     ] ;
 
-    lv2:microVersion 6-2 ;
+    lv2:microVersion 6.2 ;
     lv2:minorVersion 1 .
