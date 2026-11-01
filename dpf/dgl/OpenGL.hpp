@@ -274,7 +274,7 @@ public:
     inline void drawAt(const GraphicsContext& context, int x, int y)
     { drawAt(context, Point<int>(x, y)); }
 
-   #ifdef DGL_ALLOW_DEPRECATED_METHODS
+   #if DGL_ALLOW_DEPRECATED_METHODS
    /**
       Constructor using raw image data, specifying an OpenGL image format.
       @note @a rawData must remain valid for the lifetime of this Image.

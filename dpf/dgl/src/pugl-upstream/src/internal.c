@@ -1,4 +1,4 @@
-// Copyright 2012-2023 David Robillard <d@drobilla.net>
+// Copyright 2012-2025 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
 #include "internal.h"
@@ -111,22 +111,27 @@ puglSetBlob(PuglBlob* const dest, const void* const data, const size_t len)
   return PUGL_SUCCESS;
 }
 
-void
+PuglStatus
 puglSetString(char** dest, const char* string)
 {
-  if (*dest == string) {
-    return;
+  if (*dest != string) {
+    const size_t len = string ? strlen(string) : 0U;
+    if (!len) {
+      free(*dest);
+      *dest = NULL;
+      return PUGL_SUCCESS;
+    }
+
+    char* const new_dest = (char*)realloc(*dest, len + 1U);
+    if (!new_dest) {
+      return PUGL_NO_MEMORY;
+    }
+
+    *dest = new_dest;
+    memcpy(*dest, string, len + 1U);
   }
 
-  const size_t len = string ? strlen(string) : 0U;
-
-  if (!len) {
-    free(*dest);
-    *dest = NULL;
-  } else {
-    *dest = (char*)realloc(*dest, len + 1U);
-    strncpy(*dest, string, len + 1U);
-  }
+  return PUGL_SUCCESS;
 }
 
 PuglStatus
@@ -258,26 +263,6 @@ puglDispatchSimpleEvent(PuglView* view, const PuglEventType type)
   return puglDispatchEvent(view, &event);
 }
 
-static inline bool
-puglMustConfigure(PuglView* view, const PuglConfigureEvent* configure)
-{
-  return !!memcmp(configure, &view->lastConfigure, sizeof(PuglConfigureEvent));
-}
-
-PuglStatus
-puglConfigure(PuglView* view, const PuglEvent* event)
-{
-  PuglStatus st = PUGL_SUCCESS;
-
-  assert(event->type == PUGL_CONFIGURE);
-  if (puglMustConfigure(view, &event->configure)) {
-    st                  = view->eventFunc(view, event);
-    view->lastConfigure = event->configure;
-  }
-
-  return st;
-}
-
 PuglStatus
 puglDispatchEvent(PuglView* view, const PuglEvent* event)
 {
@@ -307,12 +292,8 @@ puglDispatchEvent(PuglView* view, const PuglEvent* event)
     break;
 
   case PUGL_CONFIGURE:
-    if (puglMustConfigure(view, &event->configure)) {
-      if (!(st0 = view->backend->enter(view, NULL))) {
-        st0 = puglConfigure(view, event);
-        st1 = view->backend->leave(view, NULL);
-      }
-    }
+    st0                 = view->eventFunc(view, event);
+    view->lastConfigure = event->configure;
     if (view->stage == PUGL_VIEW_STAGE_REALIZED) {
       view->stage = PUGL_VIEW_STAGE_CONFIGURED;
     }

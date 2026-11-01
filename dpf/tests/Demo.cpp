@@ -1,6 +1,6 @@
 /*
  * DISTRHO Plugin Framework (DPF)
- * Copyright (C) 2012-2024 Filipe Coelho <falktx@falktx.com>
+ * Copyright (C) 2012-2025 Filipe Coelho <falktx@falktx.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any purpose with
  * or without fee is hereby granted, provided that the above copyright notice and this
@@ -15,6 +15,14 @@
  */
 
 #include "tests.hpp"
+#include "dgl.cpp"
+#include "dgl/src/Color.cpp"
+#include "dgl/src/EventHandlers.cpp"
+#include "dgl/src/ImageBase.cpp"
+#ifdef DGL_OPENGL
+#include "dgl/src/NanoVG.cpp"
+#include "dgl/src/Resources.cpp"
+#endif
 
 #include "widgets/ExampleColorWidget.hpp"
 #include "widgets/ExampleImagesWidget.hpp"
@@ -29,15 +37,12 @@
 #include "images_res/CatPics.cpp"
 
 #ifdef DGL_CAIRO
-#include "../dgl/Cairo.hpp"
 typedef DGL_NAMESPACE::CairoImage DemoImage;
 #endif
 #ifdef DGL_OPENGL
-#include "../dgl/OpenGL.hpp"
 typedef DGL_NAMESPACE::OpenGLImage DemoImage;
 #endif
 #ifdef DGL_VULKAN
-#include "../dgl/Vulkan.hpp"
 typedef DGL_NAMESPACE::VulkanImage DemoImage;
 #endif
 

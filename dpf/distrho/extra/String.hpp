@@ -695,11 +695,11 @@ public:
             "abcdefghijklmnopqrstuvwxyz"
             "0123456789+/";
 
-        const size_t strBufSize = std::min(d_nextPowerOf2(static_cast<uint32_t>(dataSize/3)), 65536U);
+        const size_t strBufSize = std::min(d_nextPowerOf2(static_cast<uint32_t>(dataSize / 3) + 1), 65536U);
         char* strBuf = static_cast<char*>(std::malloc(strBufSize));
         DISTRHO_SAFE_ASSERT_RETURN(strBuf != nullptr, String());
 
-        strBuf[strBufSize] = '\0';
+        strBuf[strBufSize - 1] = '\0';
         size_t strBufIndex = 0;
 
         const uchar* bytesToEncode = static_cast<const uchar*>(data);

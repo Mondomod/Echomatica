@@ -9,6 +9,9 @@
 # extra useful variables to define before including this file:
 # - DPF_BUILD_DIR: where to place temporary build files
 # - DPF_TARGET_DIR: where to place final binary files
+# - DPF_RUNTIME_TESTING: enable testing and validation of the plugin during run-time
+#                        this includes e.g. checking parameter ranges and unique symbols
+#                        not recommended for release builds
 # - UI_TYPE: one of cairo, external, gles2, gles3, opengl, opengl3 or webview, with opengl being default
 #            ("generic" is also allowed if only using basic DPF classes like image widgets)
 
@@ -375,9 +378,10 @@ endif
 ifeq ($(WASM),true)
 MAPI_EXT    = -mapi.js
 MAPI_SHARED = \
+	-sALLOW_MEMORY_GROWTH \
+	-sALLOW_TABLE_GROWTH \
 	-sEXPORT_NAME="$(MAPI_MODULE_NAME)" \
 	-sEXPORTED_RUNTIME_METHODS=['addFunction','lengthBytesUTF8','stringToUTF8','UTF8ToString'] \
-	-sMAIN_MODULE=2 \
 	-sMODULARIZE=1
 else
 MAPI_EXT    = $(LIB_EXT)
@@ -450,7 +454,7 @@ SYMBOLS_LADSPA = -sEXPORTED_FUNCTIONS="['ladspa_descriptor']"
 SYMBOLS_LV2    = -sEXPORTED_FUNCTIONS="['lv2_descriptor','lv2_generate_ttl','lv2ui_descriptor']"
 SYMBOLS_LV2DSP = -sEXPORTED_FUNCTIONS="['lv2_descriptor','lv2_generate_ttl']"
 SYMBOLS_LV2UI  = -sEXPORTED_FUNCTIONS="['lv2ui_descriptor']"
-SYMBOLS_MAPI   = -sEXPORTED_FUNCTIONS="['_mapi_create','_mapi_process','_mapi_set_parameter','_mapi_set_state','_mapi_destroy']"
+SYMBOLS_MAPI   = -sEXPORTED_FUNCTIONS="['_malloc','_free','_mapi_create','_mapi_process','_mapi_get_parameter','_mapi_set_parameter','_mapi_set_state','_mapi_destroy']"
 SYMBOLS_VST2   = -sEXPORTED_FUNCTIONS="['VSTPluginMain']"
 SYMBOLS_VST3   = -sEXPORTED_FUNCTIONS="['GetPluginFactory','ModuleEntry','ModuleExit']"
 else ifeq ($(WINDOWS),true)
@@ -479,7 +483,7 @@ endif
 # Runtime test build
 
 ifeq ($(DPF_RUNTIME_TESTING),true)
-BUILD_CXX_FLAGS += -DDPF_RUNTIME_TESTING -Wno-pmf-conversions
+BUILD_CXX_FLAGS += -DDPF_RUNTIME_TESTING
 endif
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -650,9 +654,9 @@ $(dssi_ui): $(OBJS_UI) $(BUILD_DIR)/DistrhoUIMain_DSSI.cpp.o $(DGL_LIB)
 # ---------------------------------------------------------------------------------------------------------------------
 # LV2
 
-lv2: $(lv2)
-lv2_dsp: $(lv2_dsp)
-lv2_sep: $(lv2_dsp) $(lv2_ui)
+lv2: $(lv2) $(lv2files)
+lv2_dsp: $(lv2_dsp) $(lv2files)
+lv2_sep: $(lv2_dsp) $(lv2_ui) $(lv2files)
 
 ifeq ($(HAVE_DGL),true)
 $(lv2): $(OBJS_DSP) $(OBJS_UI) $(BUILD_DIR)/DistrhoPluginMain_LV2_single_obj.cpp.o $(BUILD_DIR)/DistrhoUIMain_LV2_single_obj.cpp.o $(DGL_LIB) $(DGL_LIB_SHARED)

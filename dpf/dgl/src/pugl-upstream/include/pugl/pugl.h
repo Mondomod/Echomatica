@@ -1,4 +1,4 @@
-// Copyright 2012-2023 David Robillard <d@drobilla.net>
+// Copyright 2012-2025 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
 #ifndef PUGL_PUGL_H
@@ -17,7 +17,6 @@ PUGL_BEGIN_DECLS
 
 /**
    @defgroup pugl Pugl C API
-   Pugl C API.
    @{
 */
 
@@ -29,20 +28,22 @@ PUGL_BEGIN_DECLS
 /**
    A pixel coordinate within/of a view.
 
-   This is relative to the top left corner of the view's parent, or to the top
-   left corner of the view itself, depending on the context.
+   This is used to represent coordinates in two different spaces, depending on
+   context: parent-relative and view-relative.
 
-   There are platform-imposed limits on window positions.  For portability,
-   applications should keep coordinates between -16000 and 16000.  Note that
-   negative frame coordinates are possible, for example with multiple screens.
+   Parent-relative coordinates of a view are relative to the top-left of the
+   parent it's embedded in, or to that of a system-specific root.  Top-level
+   positions should be between -16000 and 16000.
+
+   View-relative coordinates in a view are relative to the top-left of the
+   view.
 */
 typedef int16_t PuglCoord;
 
 /**
    A pixel span (width or height) within/of a view.
 
-   Due to platform limits, the span of a view in either dimension should be
-   between 1 and 10000.
+   The width and height of a view should be between 1 and 10000.
 */
 typedef uint16_t PuglSpan;
 
@@ -58,55 +59,20 @@ typedef struct {
   PuglSpan height;
 } PuglArea;
 
-/// A string property for configuration
-typedef enum {
-  /**
-     The application class name.
-
-     This is a stable identifier for the application, which should be a short
-     camel-case name like "MyApp".  This should be the same for every instance
-     of the application, but different from any other application.  On X11 and
-     Windows, it is used to set the class name of windows (that underlie
-     realized views), which is used for things like loading configuration, or
-     custom window management rules.
-  */
-  PUGL_CLASS_NAME = 1U,
-
-  /**
-     The title of the window or application.
-
-     This is used by the system to display a title for the application or
-     window, for example in title bars or window/application switchers.  It is
-     only used to display a label to the user, not as an identifier, and can
-     change over time to reflect the current state of the application.  For
-     example, it is common for programs to add the name of the current
-     document, like "myfile.txt - Fancy Editor".
-  */
-  PUGL_WINDOW_TITLE,
-} PuglStringHint;
-
-/// The number of #PuglStringHint values
-#define PUGL_NUM_STRING_HINTS ((unsigned)PUGL_WINDOW_TITLE + 1U)
-
 /**
    @}
    @defgroup pugl_events Events
-
-   All updates to the view happen via events, which are dispatched to the
-   view's event function.  An event is a tagged union with a type, and a set of
-   more specific fields depending on the type.
-
    @{
 */
 
-/// The type of a PuglEvent
+/// The type of a #PuglEvent
 typedef enum {
   PUGL_NOTHING,        ///< No event
   PUGL_REALIZE,        ///< View realized, a #PuglRealizeEvent
-  PUGL_UNREALIZE,      ///< View unrealizeed, a #PuglUnrealizeEvent
+  PUGL_UNREALIZE,      ///< View unrealized, a #PuglUnrealizeEvent
   PUGL_CONFIGURE,      ///< View configured, a #PuglConfigureEvent
-  PUGL_UPDATE,         ///< View ready to draw, a #PuglUpdateEvent
-  PUGL_EXPOSE,         ///< View must be drawn, a #PuglExposeEvent
+  PUGL_UPDATE,         ///< View update before draw, a #PuglUpdateEvent
+  PUGL_EXPOSE,         ///< View expose during draw, a #PuglExposeEvent
   PUGL_CLOSE,          ///< View will be closed, a #PuglCloseEvent
   PUGL_FOCUS_IN,       ///< Keyboard focus entered view, a #PuglFocusEvent
   PUGL_FOCUS_OUT,      ///< Keyboard focus left view, a #PuglFocusEvent
@@ -136,14 +102,7 @@ typedef enum {
 /// Bitwise OR of #PuglEventFlag values
 typedef uint32_t PuglEventFlags;
 
-/// Reason for a PuglCrossingEvent
-typedef enum {
-  PUGL_CROSSING_NORMAL, ///< Crossing due to pointer motion
-  PUGL_CROSSING_GRAB,   ///< Crossing due to a grab
-  PUGL_CROSSING_UNGRAB, ///< Crossing due to a grab release
-} PuglCrossingMode;
-
-/// Common header for all event structs
+/// Common header for all events
 typedef struct {
   PuglEventType  type;  ///< Event type
   PuglEventFlags flags; ///< Bitwise OR of #PuglEventFlag values
@@ -158,8 +117,7 @@ typedef struct {
    View style flags.
 
    Style flags reflect special modes and states supported by the window system.
-   Applications should ideally use a single main view, but can monitor or
-   manipulate style flags to better integrate with the window system.
+   Applications can monitor or manipulate them to improve integration.
 */
 typedef enum {
   /// View is mapped to a real window and potentially visible
@@ -202,33 +160,27 @@ typedef uint32_t PuglViewStyleFlags;
 /**
    View realize event.
 
-   This event is sent when a view is realized before it is first displayed,
-   with the graphics context entered.  This is typically used for setting up
-   the graphics system, for example by loading OpenGL extensions.
-
-   This event type has no extra fields.
+   This is sent when a view is realized before it's first displayed, with the
+   graphics context entered (but not prepared to draw).  This can be used to
+   set up the graphics system, for example by loading OpenGL extensions.
 */
 typedef PuglAnyEvent PuglRealizeEvent;
 
 /**
    View unrealize event.
 
-   This event is the counterpart to #PuglRealizeEvent, and is sent when the
-   view will no longer be displayed.  This is typically used for tearing down
-   the graphics system, or otherwise freeing any resources allocated when the
-   realize event was handled.
-
-   This event type has no extra fields.
+   This counterpart to #PuglRealizeEvent is sent when the view will no longer
+   be displayed.  This can be used to tear down the graphics system, or free
+   any resources allocated when the view was realized.
 */
 typedef PuglAnyEvent PuglUnrealizeEvent;
 
 /**
-   View resize or move event.
+   View configure (resize/move) event.
 
-   A configure event is sent whenever the view is resized or moved.  When a
-   configure event is received, the graphics context is active but not set up
-   for drawing.  For example, it is valid to adjust the OpenGL viewport or
-   otherwise configure the context, but not to draw anything.
+   This is sent whenever the view is resized or moved.  The graphics context
+   isn't active during a configure event, so these values should be saved if
+   necessary and applied the next time the view is exposed.
 */
 typedef struct {
   PuglEventType      type;   ///< #PUGL_CONFIGURE
@@ -243,12 +195,10 @@ typedef struct {
 /**
    Recursive loop enter event.
 
-   This event is sent when the window system enters a recursive loop.  The main
-   loop will be stalled and no expose events will be received while in the
-   recursive loop.  To give the application full control, Pugl does not do any
-   special handling of this situation, but this event can be used to install a
-   timer to perform continuous actions (such as drawing) on platforms that do
-   this.
+   This is sent when the window system enters a recursive loop.  While in the
+   recursive loop, the main loop will be stalled and no expose events will be
+   received.  A typical use is to install a timer to perform continuous
+   actions, such as drawing.
 
    - MacOS: A recursive loop is entered while the window is being live resized.
 
@@ -257,28 +207,22 @@ typedef struct {
 
    - X11: A recursive loop is never entered and the event loop runs as usual
      while the view is being resized.
-
-   This event type has no extra fields.
 */
 typedef PuglAnyEvent PuglLoopEnterEvent;
 
 /**
    Recursive loop leave event.
 
-   This event is sent after a loop enter event when the recursive loop is
-   finished and normal iteration will continue.
-
-   This event type has no extra fields.
+   This is sent after a loop enter event when the recursive loop is finished
+   and normal iteration will continue.
 */
 typedef PuglAnyEvent PuglLoopLeaveEvent;
 
 /**
    View close event.
 
-   This event is sent when the view is to be closed, for example when the user
-   clicks the close button.
-
-   This event type has no extra fields.
+   This is sent when the view is to be closed, for example when the user clicks
+   the close button.
 */
 typedef PuglAnyEvent PuglCloseEvent;
 
@@ -291,20 +235,20 @@ typedef PuglAnyEvent PuglCloseEvent;
 /**
    View update event.
 
-   This event is sent to every view near the end of a main loop iteration when
-   any pending exposures are about to be redrawn.  It is typically used to mark
-   regions to expose with puglObscureView() or puglObscureRegion().  For
-   example, to continuously animate, obscure the view when an update event is
-   received, and it will receive an expose event shortly afterwards.
+   This is sent near the end of a main loop iteration when the view is
+   potentially about to be redrawn.  It can be used to mark regions for
+   exposure with puglObscureView() or puglObscureRegion().  For example, to
+   continuously animate, obscure the view whenever an update event is received,
+   then receive and handle the expose event(s) shortly afterwards.
 */
 typedef PuglAnyEvent PuglUpdateEvent;
 
 /**
-   Expose event for when a region must be redrawn.
+   Expose event requiring a redraw.
 
-   When an expose event is received, the graphics context is active, and the
-   view must draw the entire specified region.  The contents of the region are
-   undefined, there is no preservation of anything drawn previously.
+   This is sent when a region needs to be redrawn, with the graphics context
+   entered and activated for drawing.  The application must completely draw the
+   given region.
 */
 typedef struct {
   PuglEventType  type;   ///< #PUGL_EXPOSE
@@ -324,13 +268,13 @@ typedef struct {
 /**
    Keyboard key codepoints.
 
-   All keys are identified by a Unicode code point in PuglKeyEvent::key.  This
-   enumeration defines constants for special keys that do not have a standard
+   All keys are identified by a Unicode code point in #PuglKeyEvent::key.  This
+   enumeration defines constants for special keys that don't have a standard
    code point, and some convenience constants for control characters.  Note
    that all keys are handled in the same way, this enumeration is just for
    convenience when writing hard-coded key bindings.
 
-   Keys that do not have a standard code point use values in the Private Use
+   Keys that don't have a standard code point use values in the Private Use
    Area in the Basic Multilingual Plane (`U+E000` to `U+F8FF`).  Applications
    must take care to not interpret these values beyond key detection, the
    mapping used here is arbitrary and specific to Pugl.
@@ -423,11 +367,18 @@ typedef enum {
 /// Bitwise OR of #PuglMod values
 typedef uint32_t PuglMods;
 
+/// Reason for a PuglCrossingEvent
+typedef enum {
+  PUGL_CROSSING_NORMAL, ///< Crossing due to pointer motion
+  PUGL_CROSSING_GRAB,   ///< Crossing due to a grab
+  PUGL_CROSSING_UNGRAB, ///< Crossing due to a grab release
+} PuglCrossingMode;
+
 /**
    Keyboard focus event.
 
-   This event is sent whenever the view gains or loses the keyboard focus.  The
-   view with the keyboard focus will receive any key press or release events.
+   This is sent whenever the view gains or loses the keyboard focus.  The view
+   with the keyboard focus will receive any key press or release events.
 */
 typedef struct {
   PuglEventType    type;  ///< #PUGL_FOCUS_IN or #PUGL_FOCUS_OUT
@@ -438,9 +389,9 @@ typedef struct {
 /**
    Key press or release event.
 
-   This event represents low-level key presses and releases.  This can be used
-   for "direct" keyboard handling like key bindings, but must not be
-   interpreted as text input.
+   This represents low-level key presses and releases.  This can be used for
+   "direct" keyboard handling like key bindings, but must not be interpreted as
+   text input.
 
    Keys are represented portably as Unicode code points, using the "natural"
    code point for the key where possible (see #PuglKey for details).  The `key`
@@ -449,7 +400,7 @@ typedef struct {
    regardless of whether shift or control are being held.
 
    Alternatively, the raw `keycode` can be used to work directly with physical
-   keys, but note that this value is not portable and differs between platforms
+   keys, but note that this value isn't portable and differs between platforms
    and hardware.
 */
 typedef struct {
@@ -468,11 +419,11 @@ typedef struct {
 /**
    Character input event.
 
-   This event represents text input, usually as the result of a key press.  The
-   text is given both as a Unicode character code and a UTF-8 string.
+   This represents text input, usually as the result of a key press.  The text
+   is given both as a Unicode character code and a UTF-8 string.
 
    Note that this event is generated by the platform's input system, so there
-   is not necessarily a direct correspondence between text events and physical
+   isn't necessarily a direct correspondence between text events and physical
    key presses.  For example, with some input methods a sequence of several key
    presses will generate a single character.
 */
@@ -515,9 +466,9 @@ typedef enum {
 /**
    Pointer enter or leave event.
 
-   This event is sent when the pointer enters or leaves the view.  This can
-   happen for several reasons (not just the user dragging the pointer over the
-   window edge), as described by the `mode` field.
+   This is sent when the pointer enters or leaves the view.  This can happen
+   for several reasons (not just the user dragging the pointer over the window
+   edge), as described by the `mode` field.
 */
 typedef struct {
   PuglEventType    type;  ///< #PUGL_POINTER_IN or #PUGL_POINTER_OUT
@@ -607,9 +558,9 @@ typedef struct {
 /**
    Custom client message event.
 
-   This can be used to send a custom message to a view, which is delivered via
-   the window system and processed in the event loop as usual.  Among other
-   things, this makes it possible to wake up the event loop for any reason.
+   This is a custom event sent to a view with puglSendEvent(), which wakes up
+   the event loop and delivers two pointer-sized data fields.  These
+   client-specific fields are opaque to Pugl and aren't interpreted in any way.
 */
 typedef struct {
   PuglEventType  type;  ///< #PUGL_CLIENT
@@ -621,12 +572,10 @@ typedef struct {
 /**
    Timer event.
 
-   This event is sent at the regular interval specified in the call to
-   puglStartTimer() that activated it.
-
-   The `id` is the application-specific ID given to puglStartTimer() which
-   distinguishes this timer from others.  It should always be checked in the
-   event handler, even in applications that register only one timer.
+   This is sent while the timer with the given `id` is activated at the regular
+   interval specified in the corresponding puglStartTimer() call.  Other
+   platform-specific timers may exist, so applications must always check the
+   `id` field before reacting to a timer event.
 */
 typedef struct {
   PuglEventType  type;  ///< #PUGL_TIMER
@@ -643,7 +592,7 @@ typedef struct {
 /**
    Clipboard data offer event.
 
-   This event is sent when a clipboard has data present, possibly with several
+   This is sent when a clipboard has data present, possibly with several
    datatypes.  While handling this event, the types can be investigated with
    puglGetClipboardType() to decide whether to accept the offer with
    puglAcceptOffer().
@@ -657,9 +606,9 @@ typedef struct {
 /**
    Clipboard data event.
 
-   This event is sent after accepting a data offer when the data has been
-   retrieved and converted.  While handling this event, the data can be
-   accessed with puglGetClipboard().
+   This is sent after accepting a data offer when the data has been retrieved
+   and converted.  While handling this event, the data can be accessed with
+   puglGetClipboard().
 */
 typedef struct {
   PuglEventType  type;      ///< #PUGL_DATA
@@ -675,14 +624,13 @@ typedef struct {
 /**
    View event.
 
-   This is a union of all event types.  The type must be checked to determine
+   This is a union of all event types.  The `type` must be checked to determine
    which fields are safe to access.  A pointer to PuglEvent can either be cast
    to the appropriate type, or the union members used.
 
    The graphics system may only be accessed when handling certain events.  The
-   graphics context is active for #PUGL_REALIZE, #PUGL_UNREALIZE,
-   #PUGL_CONFIGURE, and #PUGL_EXPOSE, but only enabled for drawing for
-   #PUGL_EXPOSE.
+   graphics context is active for #PUGL_REALIZE, #PUGL_UNREALIZE, and
+   #PUGL_EXPOSE, but only enabled for drawing for #PUGL_EXPOSE.
 */
 typedef union {
   PuglAnyEvent       any;       ///< Valid for all event types
@@ -705,7 +653,6 @@ typedef union {
 /**
    @}
    @defgroup pugl_status Status
-   Most functions return a status code which can be used to check for errors.
    @{
 */
 
@@ -733,30 +680,63 @@ puglStrerror(PuglStatus status);
 
 /**
    @}
+   @defgroup pugl_string_hints String Hints
+   @{
+*/
+
+/// A string property for configuration
+typedef enum {
+  /**
+     The application name.
+
+     This is a stable identifier for the application, usually something like
+     "my_app" which is the same as the name of the executable.  It's used as
+     the applications name for X11 resources.
+  */
+  PUGL_APPLICATION_NAME,
+
+  /**
+     The application or window class name.
+
+     This is a stable identifier for the application window class, a short
+     camel-case name like "MyApp".  This should be the same for every instance
+     of the application, but different from any other application.  On X11 and
+     Windows, it's used to set the class name of windows, which is used for
+     window management and configuration.
+  */
+  PUGL_CLASS_NAME,
+
+  /**
+     The title of the window or application.
+
+     This is used by the system to display a title for the application or
+     window, for example in title bars or window/application switchers.  It's
+     only used to display a label to the user, not as an identifier, and can
+     change over time to reflect the current state of the application.  For
+     example, it's common for programs to add the name of the current
+     document, like "myfile.txt - Fancy Editor".
+  */
+  PUGL_WINDOW_TITLE,
+} PuglStringHint;
+
+/// The number of #PuglStringHint values
+#define PUGL_NUM_STRING_HINTS 3U
+
+/**
+   @}
    @defgroup pugl_world World
-
-   The top-level context of a Pugl application or plugin.
-
-   The world contains all library-wide state.  There is no static data in Pugl,
-   so it is safe to use multiple worlds in a single process.  This is to
-   facilitate plugins or other situations where it is not possible to share a
-   world, but a single world should be shared for all views where possible.
-
    @{
 */
 
 /**
    The "world" of application state.
 
-   The world represents everything that is not associated with a particular
+   The world represents everything that isn't associated with a particular
    view.  Several worlds can be created in a single process, but code using
    different worlds must be isolated so they are never mixed.  Views are
    strongly associated with the world they were created in.
 */
 typedef struct PuglWorldImpl PuglWorld;
-
-/// Handle for the world's opaque user data
-typedef void* PuglWorldHandle;
 
 /// The type of a World
 typedef enum {
@@ -794,24 +774,24 @@ puglFreeWorld(PuglWorld* world);
 /**
    Set the user data for the world.
 
-   This is usually a pointer to a struct that contains all the state which must
-   be accessed by several views.
+   This is usually a pointer to a struct that contains all the state shared by
+   any views.
 
-   The handle is opaque to Pugl and is not interpreted in any way.
+   The handle is opaque to Pugl and isn't interpreted in any way.
 */
 PUGL_API void
-puglSetWorldHandle(PuglWorld* world, PuglWorldHandle handle);
+puglSetWorldHandle(PuglWorld* world, void* handle);
 
 /// Get the user data for the world
-PUGL_API PuglWorldHandle
+PUGL_API void*
 puglGetWorldHandle(PuglWorld* world);
 
 /**
    Return the native world handle.
 
    The "native world" is a system-specific handle that's shared across an
-   entire program or module.  It serves as a common denominator between pugl,
-   host applications, the windowing system API, and other APIs that use it.
+   entire program or module.  It serves as a common denominator between Pugl,
+   applications, and the windowing system API.
 
    X11: Returns a pointer to the `Display`.
 
@@ -834,8 +814,8 @@ puglSetWorldString(PuglWorld* world, PuglStringHint key, const char* value);
 /**
    Get a world or application string property.
 
-   The returned string should be accessed immediately, or copied.  It may
-   become invalid upon any call to any function that manipulates the same view.
+   The returned string should be accessed immediately or copied if necessary,
+   it may be invalidated by any change to the same world.
 */
 PUGL_API const char*
 puglGetWorldString(const PuglWorld* world, PuglStringHint key);
@@ -853,21 +833,20 @@ puglGetTime(const PuglWorld* world);
 /**
    Update by processing events from the window system.
 
-   This function is a single iteration of the main loop, and should be called
+   This runs a single iteration of the main loop, and needs to be called
    repeatedly to update all views.
 
-   If `timeout` is zero, then this function will not block.  Plugins should
-   always use a timeout of zero to avoid blocking the host.
+   Plugins should always use a timeout of zero to avoid blocking the host.  For
+   continuously animating programs, a timeout that's a reasonable fraction of
+   the ideal frame period should be used, to minimize input latency by ensuring
+   that as many input events are consumed as possible before drawing.
 
-   If a positive `timeout` is given, then events will be processed for that
-   amount of time, starting from when this function was called.
+   @param world The world to update.
 
-   If a negative `timeout` is given, this function will block indefinitely
-   until an event occurs.
-
-   For continuously animating programs, a timeout that is a reasonable fraction
-   of the ideal frame period should be used, to minimize input latency by
-   ensuring that as many input events are consumed as possible before drawing.
+   @param timeout If zero, then this call won't block.  If positive, then
+   events will be processed for that amount of time, starting from when this
+   function was called.  If negative, then this call will block until an event
+   occurs.
 
    @return #PUGL_SUCCESS if events are read, #PUGL_FAILURE if no events are
    read, or an error.
@@ -877,33 +856,34 @@ puglUpdate(PuglWorld* world, double timeout);
 
 /**
    @}
-   @defgroup pugl_view View
-
-   A drawable region that receives events.
-
-   A view can be thought of as a window, but does not necessarily correspond to
-   a top-level window in a desktop environment.  For example, a view can be
-   embedded in some other window, or represent an embedded system where there
-   is no concept of multiple windows at all.
-
+   @defgroup pugl_backend Backend
    @{
 */
-
-/// A drawable region that receives events
-typedef struct PuglViewImpl PuglView;
 
 /**
    A graphics backend.
 
    The backend dictates how graphics are set up for a view, and how drawing is
    performed.  A backend must be set by calling puglSetBackend() before
-   realising a view.
-
-   If you are using a local copy of Pugl, it is possible to implement a custom
-   backend.  See the definition of `PuglBackendImpl` in the source code for
-   details.
+   realizing a view.
 */
 typedef struct PuglBackendImpl PuglBackend;
+
+/**
+   @}
+   @defgroup pugl_view View
+   @{
+*/
+
+/**
+   A drawable region that receives events.
+
+   A view can be thought of as a window, but doesn't necessarily correspond to
+   a top-level window in a desktop environment.  For example, a view can be
+   embedded in another, or represent a simple embedded system with no concept
+   of windows at all.
+*/
+typedef struct PuglViewImpl PuglView;
 
 /**
    A native view handle.
@@ -920,9 +900,6 @@ typedef struct PuglBackendImpl PuglBackend;
    Windows: This is a `HWND`.
 */
 typedef uintptr_t PuglNativeView;
-
-/// Handle for a view's opaque user data
-typedef void* PuglHandle;
 
 /// An integer hint for configuring a view
 typedef enum {
@@ -949,7 +926,7 @@ typedef enum {
 } PuglViewHint;
 
 /// The number of #PuglViewHint values
-#define PUGL_NUM_VIEW_HINTS ((unsigned)PUGL_DARK_FRAME + 1U)
+#define PUGL_NUM_VIEW_HINTS 20U
 
 /// A special view hint value
 typedef enum {
@@ -970,54 +947,50 @@ typedef enum {
 } PuglViewType;
 
 /**
-   A hint for configuring/constraining the position of a view.
+   A hint for configuring or constraining the position of a view.
 
-   The system will attempt to make the view's window adhere to these, but they
-   are suggestions, not hard constraints.  Applications should handle any view
+   The system will attempt to make the view adhere to these, but they are
+   suggestions, not hard constraints.  Applications should handle any view
    position gracefully.
 
    An unset position has `INT16_MIN` (-32768) for both `x` and `y`.  In
    practice, set positions should be between -16000 and 16000 for portability.
    Usually, the origin is the top left of the display, although negative
-   coordinates are possible, particularly on multi-display system.
+   coordinates are possible, particularly on multi-display systems.
 */
 typedef enum {
   /**
      Default position.
 
-     This is used as the position during window creation as a default, if no
-     other position is specified.  It isn't necessary to set a default position
-     (unlike the default size, which is required).  If not even a default
-     position is set, then the window will be created at an arbitrary position.
-     This position is a best-effort attempt to do the most reasonable thing for
-     the initial display of the window, for example, by centering.  Note that
-     it is implementation-defined, subject to change, platform-specific, and
-     for embedded views, may no longer make sense if the parent's size is
-     adjusted.  Code that wants to make assumptions about the initial position
-     must set the default to a specific valid one, such as `{0, 0}`.
+     This is used as the initial position if no other position is specified.
+     It isn't necessary to set a default position (unlike the default size,
+     which is required).  If not even a default position is set, then the
+     window will be placed somewhere reasonable according to platform
+     conventions.  Applications must not make assumptions about the initial
+     position, which is implementation-defined, platform-specific, and for
+     embedded views, may become invalid if the parent's size is adjusted.
   */
   PUGL_DEFAULT_POSITION,
 
   /**
      Current position.
 
-     This reflects the current position of the view, which may be different from
-     the default position if the view has been moved by the user, window
-     manager, or for any other reason.  Typically, it overrides the
-     default position.
+     This reflects the current position of the view, which may be different
+     from the default position if the view has been moved by the user, window
+     manager, or for any other reason.  It overrides the default position.
   */
   PUGL_CURRENT_POSITION,
 } PuglPositionHint;
 
 /// The number of #PuglPositionHint values
-#define PUGL_NUM_POSITION_HINTS ((unsigned)PUGL_CURRENT_POSITION + 1U)
+#define PUGL_NUM_POSITION_HINTS 2U
 
 /**
    A hint for configuring/constraining the size of a view.
 
-   The system will attempt to make the view's window adhere to these, but they
-   are suggestions, not hard constraints.  Applications should handle any view
-   size gracefully.
+   The system will attempt to make the view adhere to these, but they are
+   suggestions, not hard constraints.  Applications should handle any view size
+   gracefully.
 */
 typedef enum {
   /**
@@ -1032,52 +1005,51 @@ typedef enum {
      Current size.
 
      This reflects the current size of the view, which may be different from
-     the default size if the view is resizable.  Typically, it overrides the
-     default size.
+     the default size if the view is resizable.  It overrides the default size.
   */
   PUGL_CURRENT_SIZE,
 
   /**
      Minimum size.
 
-     If set, the view's size should be constrained to be at least this large.
+     If set, the view should be at least this large.
   */
   PUGL_MIN_SIZE,
 
   /**
      Maximum size.
 
-     If set, the view's size should be constrained to be at most this large.
+     If set, the view should be at most this large.
   */
   PUGL_MAX_SIZE,
 
   /**
      Fixed aspect ratio.
 
-     If set, the view's size should be constrained to this aspect ratio.
-     Mutually exclusive with #PUGL_MIN_ASPECT and #PUGL_MAX_ASPECT.
+     If set, the view should have this aspect ratio.  Mutually exclusive with
+     #PUGL_MIN_ASPECT and #PUGL_MAX_ASPECT.
   */
   PUGL_FIXED_ASPECT,
 
   /**
      Minimum aspect ratio.
 
-     If set, the view's size should be constrained to an aspect ratio no lower
-     than this.  Mutually exclusive with #PUGL_FIXED_ASPECT.
+     If set, the view should have an aspect ratio no lower than this.  Mutually
+     exclusive with #PUGL_FIXED_ASPECT.
   */
   PUGL_MIN_ASPECT,
 
   /**
      Maximum aspect ratio.
 
-     If set, the view's size should be constrained to an aspect ratio no higher
-     than this.  Mutually exclusive with #PUGL_FIXED_ASPECT.
+     If set, the view should have an aspect ratio no higher than this.
+     Mutually exclusive with #PUGL_FIXED_ASPECT.
   */
   PUGL_MAX_ASPECT,
 } PuglSizeHint;
 
 /// The number of #PuglSizeHint values
-#define PUGL_NUM_SIZE_HINTS ((unsigned)PUGL_MAX_ASPECT + 1U)
+#define PUGL_NUM_SIZE_HINTS 7U
 
 /// A function called when an event occurs
 typedef PuglStatus (*PuglEventFunc)(PuglView* view, const PuglEvent* event);
@@ -1091,9 +1063,8 @@ typedef PuglStatus (*PuglEventFunc)(PuglView* view, const PuglEvent* event);
 /**
    Create a new view.
 
-   A newly created view does not correspond to a real system view or window.
-   It must first be configured, then the system view can be created with
-   puglRealize().
+   A newly created view doesn't correspond to a real system view or window
+   until it's configured and realized.
 */
 PUGL_MALLOC_API PuglView*
 puglNewView(PuglWorld* world);
@@ -1109,17 +1080,17 @@ puglGetWorld(PuglView* view);
 /**
    Set the user data for a view.
 
-   This is usually a pointer to a struct that contains all the state which must
-   be accessed by a view.  Everything needed to process events should be stored
-   here, not in static variables.
+   This is usually a pointer to a struct that contains all the state needed by
+   a view.  Everything needed to process events should be stored here, not in
+   static variables.
 
-   The handle is opaque to Pugl and is not interpreted in any way.
+   The handle is opaque to Pugl and isn't interpreted in any way.
 */
 PUGL_API void
-puglSetHandle(PuglView* view, PuglHandle handle);
+puglSetHandle(PuglView* view, void* handle);
 
 /// Get the user data for a view
-PUGL_API PuglHandle
+PUGL_API void*
 puglGetHandle(PuglView* view);
 
 /**
@@ -1128,13 +1099,14 @@ puglGetHandle(PuglView* view);
    This must be called once to set the graphics backend before calling
    puglRealize().
 
-   Pugl includes the following backends:
+   Pugl includes a "stub" backend for platform-specific applications, and
+   several portable backends:
 
    - puglCairoBackend()
    - puglGlBackend()
    - puglVulkanBackend()
 
-   Note that backends are modular and not compiled into the main Pugl library
+   These backends are modules that aren't compiled in to the main Pugl library
    to avoid unnecessary dependencies.  To use a particular backend,
    applications must link against the appropriate backend library, or be sure
    to compile in the appropriate code if using a local copy of Pugl.
@@ -1192,12 +1164,8 @@ puglGetViewString(const PuglView* view, PuglStringHint key);
 
    This factor describe how large UI elements (especially text) should be
    compared to "normal".  For example, 2.0 means the UI should be drawn twice
-   as large.
-
-   "Normal" is loosely defined, but means a good size on a "standard DPI"
-   display (around 96 DPI).  In other words, the scale 1.0 should have text
-   that is reasonably sized on a 96 DPI display, and the scale 2.0 should have
-   text twice that large.
+   as large.  "Normal" is loosely defined as a typical default size on a
+   "standard DPI" display (around 96 DPI).
 */
 PUGL_API double
 puglGetScaleFactor(const PuglView* view);
@@ -1227,7 +1195,7 @@ puglGetPositionHint(const PuglView* view, PuglPositionHint hint);
    view can be configured correctly.  It may also be used dynamically after the
    window is realized, for some hints.
 
-   @return An error code on failure, but always succeeds if the view is not yet
+   @return An error code on failure, but always succeeds if the view isn't yet
    realized.
 */
 PUGL_API PuglStatus
@@ -1252,7 +1220,7 @@ puglGetSizeHint(const PuglView* view, PuglSizeHint hint);
    view can be configured correctly.  It may also be used dynamically after the
    window is realized, for some hints.
 
-   @return An error code on failure, but always succeeds if the view is not yet
+   @return An error code on failure, but always succeeds if the view isn't yet
    realized.
 */
 PUGL_API PuglStatus
@@ -1271,7 +1239,7 @@ puglSetSizeHint(PuglView*    view,
 /**
    Set the native view the view will be embedded in.
 
-   This must be called before puglRealize(), reparenting is not supported.
+   This must be called before puglRealize(), reparenting isn't supported.
 */
 PUGL_API PuglStatus
 puglSetParent(PuglView* view, PuglNativeView parent);
@@ -1367,7 +1335,7 @@ typedef enum {
    do so automatically.  If the view is currently hidden, it will be shown and
    possibly raised to the top depending on the platform.
 
-   @return #PUGL_SUCCESS, an error from puglRealize(), or #PUGL_FAILURE if the
+   @return #PUGL_SUCCESS, an error from realization, or #PUGL_FAILURE if the
    window was shown but not raised.
 */
 PUGL_API PuglStatus
@@ -1395,12 +1363,7 @@ puglHide(PuglView* view);
 PUGL_API PuglStatus
 puglSetViewStyle(PuglView* view, PuglViewStyleFlags flags);
 
-/**
-   Return true if the view currently has a style flag set.
-
-   The result is determined based on the state announced in the last configure
-   event.
-*/
+/// Return the style flags currently set for a view
 PUGL_API PuglViewStyleFlags
 puglGetViewStyle(const PuglView* view);
 
@@ -1410,7 +1373,7 @@ puglGetVisible(const PuglView* view);
 
 /// Return the native window handle
 PUGL_API PuglNativeView
-puglGetNativeView(PuglView* view);
+puglGetNativeView(const PuglView* view);
 
 /**
    @}
@@ -1423,7 +1386,7 @@ puglGetNativeView(PuglView* view);
    Get the graphics context.
 
    This is a backend-specific context used for drawing if the backend graphics
-   API requires one.  It is only available during an expose.
+   API requires one.  It's only available during an expose.
 
    Cairo: Returns a pointer to a
    [cairo_t](http://www.cairographics.org/manual/cairo-cairo-t.html).
@@ -1438,7 +1401,7 @@ puglGetContext(PuglView* view);
 
    This will cause an expose event to be dispatched later.  If called from
    within the event handler, the expose should arrive at the end of the current
-   event loop iteration, though this is not strictly guaranteed on all
+   event loop iteration, though this isn't strictly guaranteed on all
    platforms.  If called elsewhere, an expose will be enqueued to be processed
    in the next event loop iteration.
 */
@@ -1450,7 +1413,7 @@ puglObscureView(PuglView* view);
 
    This will cause an expose event to be dispatched later.  If called from
    within the event handler, the expose should arrive at the end of the current
-   event loop iteration, though this is not strictly guaranteed on all
+   event loop iteration, though this isn't strictly guaranteed on all
    platforms.  If called elsewhere, an expose will be enqueued to be processed
    in the next event loop iteration.
 
@@ -1496,12 +1459,12 @@ typedef enum {
 } PuglCursor;
 
 /// The number of #PuglCursor values
-#define PUGL_NUM_CURSORS ((unsigned)PUGL_CURSOR_ALL_SCROLL + 1U)
+#define PUGL_NUM_CURSORS 10U
 
 /**
    Grab the keyboard input focus.
 
-   Note that this will fail if the view is not mapped and so should not, for
+   Note that this will fail if the view isn't mapped and so shouldn't, for
    example, be called immediately after puglShow().
 
    @return #PUGL_SUCCESS if the focus was successfully grabbed, or an error.
@@ -1537,7 +1500,7 @@ puglGetNumClipboardTypes(const PuglView* view);
    Return the identifier of a type available in a clipboard.
 
    This is usually a MIME type, but may also be another platform-specific type
-   identifier.  Applications must ignore any type they do not recognize.
+   identifier.  Applications must ignore any type they don't recognize.
 
    Returns null if `typeIndex` is out of bounds according to
    puglGetNumClipboardTypes().
@@ -1601,11 +1564,11 @@ puglGetClipboard(PuglView* view, uint32_t typeIndex, size_t* len);
    Set the mouse cursor.
 
    This changes the system cursor that is displayed when the pointer is inside
-   the view.  May fail if setting the cursor is not supported on this system,
+   the view.  May fail if setting the cursor isn't supported on this system,
    for example if compiled on X11 without Xcursor support.
 
    @return #PUGL_BAD_PARAMETER if the given cursor is invalid,
-   #PUGL_UNSUPPORTED if setting the cursor is not supported on this system, or
+   #PUGL_UNSUPPORTED if setting the cursor isn't supported on this system, or
    another error if the cursor is known but loading it fails.
 */
 PUGL_API PuglStatus
@@ -1623,18 +1586,15 @@ puglSetCursor(PuglView* view, PuglCursor cursor);
 
    @param view The view to begin sending #PUGL_TIMER events to.
 
-   @param id The identifier for this timer.  This is an application-specific ID
-   that should be a low number, typically the value of a constant or `enum`
-   that starts from 0.  There is a platform-specific limit to the number of
-   supported timers, and overhead associated with each, so applications should
-   create only a few timers and perform several tasks in one if necessary.
+   @param id The identifier for this timer.  This is an application-specific
+   ID, usually a small positive integer enumerator.  Only a limited number of
+   timers is supported, and each adds overhead, so applications should create
+   only a few timers, and perform several tasks in each if necessary.
 
-   @param timeout The period, in seconds, of this timer.  This is not
-   guaranteed to have a resolution better than 10ms (the maximum timer
-   resolution on Windows) and may be rounded up if it is too short.  On X11 and
-   MacOS, a resolution of about 1ms can usually be relied on.
+   @param timeout The period, in seconds, of this timer.  The maximum supported
+   resolution is about 10 ms on Windows, and about 1 ms on X11 and MacOS.
 
-   @return #PUGL_FAILURE if timers are not supported by the system,
+   @return #PUGL_FAILURE if timers aren't supported by the system,
    #PUGL_UNKNOWN_ERROR if setting the timer failed.
 */
 PUGL_API PuglStatus
@@ -1646,7 +1606,7 @@ puglStartTimer(PuglView* view, uintptr_t id, double timeout);
    @param view The view that the timer is set for.
    @param id The ID previously passed to puglStartTimer().
 
-   @return #PUGL_FAILURE if timers are not supported by this system,
+   @return #PUGL_FAILURE if timers aren't supported by this system,
    #PUGL_UNKNOWN_ERROR if stopping the timer failed.
 */
 PUGL_API PuglStatus
@@ -1656,10 +1616,9 @@ puglStopTimer(PuglView* view, uintptr_t id);
    Send an event to a view via the window system.
 
    If supported, the event will be delivered to the view via the event loop
-   like other events.  Note that this function only works for certain event
-   types.
+   like any other.  Only a few event types are currently supported.
 
-   Currently, only #PUGL_CLIENT events are supported on all platforms.
+   Opaque #PUGL_CLIENT events are supported on all platforms.
 
    X11: A #PUGL_EXPOSE event can be sent, which is similar to calling
    puglObscureRegion(), but will always send a message to the X server, even

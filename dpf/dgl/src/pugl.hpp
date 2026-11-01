@@ -84,9 +84,6 @@ PuglStatus puglSetSizeAndDefault(PuglView* view, uint width, uint height);
 // DGL specific, build-specific drawing prepare
 void puglOnDisplayPrepare(PuglView* view);
 
-// DGL specific, build-specific fallback resize
-void puglFallbackOnResize(PuglView* view, uint width, uint height);
-
 #if defined(DISTRHO_OS_HAIKU)
 
 // nothing here yet

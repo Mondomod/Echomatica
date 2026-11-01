@@ -12,7 +12,6 @@
 
 #include <assert.h>
 #include <stdbool.h>
-#include <stddef.h>
 #include <string.h>
 
 typedef enum {
@@ -44,7 +43,7 @@ onEvent(PuglView* view, const PuglEvent* event)
     test->state = REALIZED;
     break;
   case PUGL_CONFIGURE:
-    assert(test->state == REALIZED);
+    assert(test->state == REALIZED || test->state == CONFIGURED);
     test->state = CONFIGURED;
     break;
   case PUGL_UNREALIZE:
@@ -83,7 +82,7 @@ main(int argc, char** argv)
 
   // Create and show window
   assert(!puglRealize(test.view));
-  assert(!puglShow(test.view, PUGL_SHOW_RAISE));
+  assert(puglShow(test.view, PUGL_SHOW_RAISE) <= PUGL_FAILURE);
   while (test.state < CONFIGURED) {
     assert(!puglUpdate(test.world, -1.0));
   }

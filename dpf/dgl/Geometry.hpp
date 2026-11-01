@@ -369,7 +369,7 @@ public:
     bool operator==(const Line<T>& line) const noexcept;
     bool operator!=(const Line<T>& line) const noexcept;
 
-   #ifdef DGL_ALLOW_DEPRECATED_METHODS
+   #if DGL_ALLOW_DEPRECATED_METHODS
    /**
       Draw this line using the current OpenGL state.@n
       DEPRECATED Please use draw(const GraphicsContext&) instead.
@@ -487,7 +487,7 @@ public:
     bool operator==(const Circle<T>& cir) const noexcept;
     bool operator!=(const Circle<T>& cir) const noexcept;
 
-   #ifdef DGL_ALLOW_DEPRECATED_METHODS
+   #if DGL_ALLOW_DEPRECATED_METHODS
    /**
       Draw this circle using the current OpenGL state.@n
       DEPRECATED Please use draw(const GraphicsContext&) instead.
@@ -580,7 +580,7 @@ public:
     bool operator==(const Triangle<T>& tri) const noexcept;
     bool operator!=(const Triangle<T>& tri) const noexcept;
 
-   #ifdef DGL_ALLOW_DEPRECATED_METHODS
+   #if DGL_ALLOW_DEPRECATED_METHODS
    /**
       Draw this triangle using the current OpenGL state.@n
       DEPRECATED Please use draw(const GraphicsContext&) instead.
@@ -811,7 +811,7 @@ public:
     bool operator==(const Rectangle<T>& size) const noexcept;
     bool operator!=(const Rectangle<T>& size) const noexcept;
 
-   #ifdef DGL_ALLOW_DEPRECATED_METHODS
+   #if DGL_ALLOW_DEPRECATED_METHODS
    /**
       Draw this rectangle using the current OpenGL state.@n
       DEPRECATED Please use draw(const GraphicsContext&) instead.

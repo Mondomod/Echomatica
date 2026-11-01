@@ -7,30 +7,26 @@
 #include <pugl/attributes.h>
 #include <pugl/pugl.h>
 
-// IWYU pragma: begin_exports
-
 /* Unfortunately, GL includes vary across platforms, so include them here to
    enable pure portable programs. */
 
 #ifndef PUGL_NO_INCLUDE_GL_H
 #  ifdef __APPLE__
-#    include <OpenGL/gl.h>
+#    include <OpenGL/gl.h> // IWYU pragma: export
 #  else
 #    ifdef _WIN32
 #      include <windows.h>
 #    endif
-#    include <GL/gl.h>
+#    include <GL/gl.h> // IWYU pragma: export
 #  endif
 #endif
-
-// IWYU pragma: end_exports
 
 PUGL_BEGIN_DECLS
 
 /**
    @defgroup pugl_gl OpenGL
    OpenGL graphics support.
-   @ingroup pugl
+   @ingroup pugl_backend
    @{
 */
 
@@ -41,6 +37,9 @@ typedef void (*PuglGlFunc)(void);
 
 /**
    Return the address of an OpenGL extension function.
+
+   The returned void function pointer must be cast to the appropriate function
+   type (defined by the OpenGL specification) in order to be called.
 */
 PUGL_API PuglGlFunc
 puglGetProcAddress(const char* name);

@@ -6,7 +6,6 @@
 #ifndef PUGL_INTERNAL_H
 #define PUGL_INTERNAL_H
 
-#include "attributes.h"
 #include "types.h"
 
 #include <pugl/attributes.h>
@@ -19,15 +18,15 @@
 PUGL_BEGIN_DECLS
 
 /// Return true if `x`,`y` is a valid position
-bool
+PUGL_CONST_FUNC bool
 puglIsValidPosition(int x, int y);
 
 /// Return true if `width`,`height` is a valid position
-bool
+PUGL_CONST_FUNC bool
 puglIsValidSize(unsigned width, unsigned height);
 
 /// Return true if `size` is a valid view size
-bool
+PUGL_CONST_FUNC bool
 puglIsValidArea(PuglArea size);
 
 /// Return the center point of some "soft" ancestor (parent window or screen)
@@ -51,7 +50,7 @@ PuglStatus
 puglSetBlob(PuglBlob* dest, const void* data, size_t len);
 
 /// Reallocate and set `*dest` to `string`
-void
+PuglStatus
 puglSetString(char** dest, const char* string);
 
 /// Store `width` and `height` as the current value of a size `hint`
@@ -61,16 +60,16 @@ puglStoreSizeHint(PuglView*    view,
                   unsigned     width,
                   unsigned     height);
 
-/// Handle a changed string property
+/// Apply a change to a string property
 PuglStatus
-puglViewStringChanged(PuglView* view, PuglStringHint key, const char* value);
+puglApplyViewString(PuglView* view, PuglStringHint key, const char* value);
 
 /// Return the Unicode code point for `buf` or the replacement character
 uint32_t
 puglDecodeUTF8(const uint8_t* buf);
 
 /// Return `state` with any flags related to `key` removed
-PuglMods
+PUGL_CONST_FUNC PuglMods
 puglFilterMods(PuglMods state, PuglKey key);
 
 /// Prepare a view to be realized by the platform implementation if possible
@@ -80,10 +79,6 @@ puglPreRealize(PuglView* view);
 /// Dispatch an event with a simple `type` to `view`
 PuglStatus
 puglDispatchSimpleEvent(PuglView* view, PuglEventType type);
-
-/// Process configure event while already in the graphics context
-PUGL_WARN_UNUSED_RESULT PuglStatus
-puglConfigure(PuglView* view, const PuglEvent* event);
 
 /// Dispatch `event` to `view`, entering graphics context if necessary
 PuglStatus

@@ -1,6 +1,6 @@
 /*
  * DISTRHO Plugin Framework (DPF)
- * Copyright (C) 2012-2024 Filipe Coelho <falktx@falktx.com>
+ * Copyright (C) 2012-2026 Filipe Coelho <falktx@falktx.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any purpose with
  * or without fee is hereby granted, provided that the above copyright notice and this
@@ -33,6 +33,8 @@
 #define DISTRHO_PLUGIN_WANT_STATE      1
 #define DISTRHO_UI_FILE_BROWSER        0
 #define DISTRHO_UI_USER_RESIZABLE      1
+#define DISTRHO_UI_DEFAULT_WIDTH       512
+#define DISTRHO_UI_DEFAULT_HEIGHT      512
 
 // states and presets together require this in order to function
 #define DISTRHO_PLUGIN_WANT_FULL_STATE 1

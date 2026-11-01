@@ -1,6 +1,6 @@
 /*
  * DISTRHO Plugin Framework (DPF)
- * Copyright (C) 2012-2024 Filipe Coelho <falktx@falktx.com>
+ * Copyright (C) 2012-2025 Filipe Coelho <falktx@falktx.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any purpose with
  * or without fee is hereby granted, provided that the above copyright notice and this
@@ -16,10 +16,6 @@
 
 #pragma once
 
-#include "dgl/Application.hpp"
-
-#include "distrho/extra/Thread.hpp"
-
 #define DISTRHO_ASSERT_EQUAL(v1, v2, msg) \
     if (v1 != v2) { d_stderr2("Test condition failed: %s; file:%s line:%i", msg, __FILE__, __LINE__); return 1; }
 
@@ -28,6 +24,11 @@
 
 #define DISTRHO_ASSERT_SAFE_EQUAL(v1, v2, msg) \
     if (d_isNotEqual(v1, v2)) { d_stderr2("Test condition failed: %s; file:%s line:%i", msg, __FILE__, __LINE__); return 1; }
+
+#ifndef HEADLESS_TESTS
+
+#include "dgl/Application.hpp"
+#include "distrho/extra/Thread.hpp"
 
 START_NAMESPACE_DGL
 
@@ -59,3 +60,5 @@ private:
 // --------------------------------------------------------------------------------------------------------------------
 
 END_NAMESPACE_DGL
+
+#endif

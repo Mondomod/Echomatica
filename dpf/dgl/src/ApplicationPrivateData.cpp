@@ -165,13 +165,11 @@ void Application::PrivateData::quit()
 
     isQuitting = true;
 
-   #ifndef DPF_TEST_APPLICATION_CPP
     for (WindowListReverseIterator rit = windows.rbegin(), rite = windows.rend(); rit != rite; ++rit)
     {
         DGL_NAMESPACE::Window* const window(*rit);
         window->close();
     }
-   #endif
 }
 
 double Application::PrivateData::getTime() const

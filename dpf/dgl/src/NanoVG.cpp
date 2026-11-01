@@ -1,6 +1,6 @@
 /*
  * DISTRHO Plugin Framework (DPF)
- * Copyright (C) 2012-2021 Filipe Coelho <falktx@falktx.com>
+ * Copyright (C) 2012-2025 Filipe Coelho <falktx@falktx.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any purpose with
  * or without fee is hereby granted, provided that the above copyright notice and this
@@ -272,6 +272,16 @@ bool NanoImage::isValid() const noexcept
 Size<uint> NanoImage::getSize() const noexcept
 {
     return fSize;
+}
+
+uint NanoImage::getWidth() const noexcept
+{
+    return fSize.getWidth();
+}
+
+uint NanoImage::getHeight() const noexcept
+{
+    return fSize.getHeight();
 }
 
 GLuint NanoImage::getTextureHandle() const
@@ -1135,8 +1145,8 @@ inline void NanoBaseWidget<SubWidget>::onDisplay()
         NanoVG::save();
         translate(SubWidget::getAbsoluteX(), SubWidget::getAbsoluteY());
         onNanoDisplay();
-        NanoVG::restore();
         displayChildren();
+        NanoVG::restore();
     }
     else
     {
@@ -1144,6 +1154,9 @@ inline void NanoBaseWidget<SubWidget>::onDisplay()
         onNanoDisplay();
         displayChildren();
         NanoVG::endFrame();
+       #ifdef DGL_USE_OPENGL3
+        glUseProgram(reinterpret_cast<const OpenGL3GraphicsContext&>(getGraphicsContext()).program);
+       #endif
     }
 }
 

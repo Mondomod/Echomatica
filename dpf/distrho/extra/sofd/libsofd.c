@@ -307,10 +307,10 @@ const char *x_fib_recent_at (unsigned int i) {
 #endif
 
 const char *x_fib_recent_file(const char *appname) {
-	static char recent_file[1024];
+	static char recent_file[2048];
 	assert(!strchr(appname, '/'));
 	const char *xdg = getenv("XDG_DATA_HOME");
-	if (xdg && (strlen(xdg) + strlen(appname) + 10) < sizeof(recent_file)) {
+	if (xdg && (strlen(xdg) + strlen(appname) + 10 + sizeof(recent_file) / 2) < sizeof(recent_file)) {
 		sprintf(recent_file, "%s" PATHSEP "%s" PATHSEP "recent", xdg, appname);
 		return recent_file;
 	}
@@ -329,7 +329,7 @@ const char *x_fib_recent_file(const char *appname) {
 	}
 #else
 	const char *home = getenv("HOME");
-	if (home && (strlen(home) + strlen(appname) + 22) < sizeof(recent_file)) {
+	if (home && (strlen(home) + strlen(appname) + 22 + sizeof(recent_file) / 2) < sizeof(recent_file)) {
 		sprintf(recent_file, "%s/.local/share/%s/recent", home, appname);
 		return recent_file;
 	}

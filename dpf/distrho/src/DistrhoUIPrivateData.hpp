@@ -115,7 +115,9 @@ class PluginWindow : public DGL_NAMESPACE::Window
 {
     UI* const ui;
     bool initializing;
+   #if DGL_ALLOW_DEPRECATED_METHODS
     bool receivedReshapeDuringInit;
+   #endif
 
 public:
     explicit PluginWindow(UI* const uiPtr,
@@ -130,8 +132,10 @@ public:
                  DISTRHO_UI_USES_SIZE_REQUEST,
                  false),
           ui(uiPtr),
-          initializing(true),
-          receivedReshapeDuringInit(false)
+          initializing(true)
+       #if DGL_ALLOW_DEPRECATED_METHODS
+        , receivedReshapeDuringInit(false)
+       #endif
     {
         if (pData->view == nullptr)
             return;
@@ -159,12 +163,31 @@ public:
         initializing = false;
         puglBackendLeave(pData->view);
 
+       #if DGL_ALLOW_DEPRECATED_METHODS
         if (receivedReshapeDuringInit)
         {
             puglBackendEnter(pData->view);
+           #if defined(_MSC_VER)
+            #pragma warning(push)
+            #pragma warning(disable:4996)
+           #elif defined(__clang__)
+            #pragma clang diagnostic push
+            #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+           #elif defined(__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__) >= 460
+            #pragma GCC diagnostic push
+            #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+           #endif
             ui->uiReshape(getWidth(), getHeight());
+           #if defined(_MSC_VER)
+            #pragma warning(pop)
+           #elif defined(__clang__)
+            #pragma clang diagnostic pop
+           #elif defined(__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__) >= 460
+            #pragma GCC diagnostic pop
+           #endif
             puglBackendLeave(pData->view);
         }
+       #endif
     }
 
     // used for temporary windows (VST/CLAP get size without active/visible view)
@@ -213,6 +236,17 @@ protected:
         ui->uiFocus(focus, mode);
     }
 
+  #if DGL_ALLOW_DEPRECATED_METHODS
+   #if defined(_MSC_VER)
+    #pragma warning(push)
+    #pragma warning(disable:4996)
+   #elif defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+   #elif defined(__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__) >= 460
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+   #endif
     void onReshape(const uint width, const uint height) override
     {
         DISTRHO_SAFE_ASSERT_RETURN(ui != nullptr,);
@@ -225,6 +259,14 @@ protected:
 
         ui->uiReshape(width, height);
     }
+   #if defined(_MSC_VER)
+    #pragma warning(pop)
+   #elif defined(__clang__)
+    #pragma clang diagnostic pop
+   #elif defined(__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__) >= 460
+    #pragma GCC diagnostic pop
+   #endif
+  #endif
 
     void onScaleFactorChanged(const double scaleFactor) override
     {

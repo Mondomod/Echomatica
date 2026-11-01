@@ -308,6 +308,11 @@ PuglStatus puglSetGeometryConstraints(PuglView* const view, const uint width, co
         view->sizeHints[PUGL_FIXED_ASPECT].width = static_cast<PuglSpan>(width);
         view->sizeHints[PUGL_FIXED_ASPECT].height = static_cast<PuglSpan>(height);
     }
+    else
+    {
+        view->sizeHints[PUGL_FIXED_ASPECT].width = 0;
+        view->sizeHints[PUGL_FIXED_ASPECT].height = 0;
+    }
 
    #if defined(DISTRHO_OS_HAIKU)
    #elif defined(DISTRHO_OS_MAC)
@@ -432,33 +437,6 @@ void puglOnDisplayPrepare(PuglView*)
    #ifndef DGL_USE_OPENGL3
     glLoadIdentity();
    #endif
-  #endif
-}
-
-// --------------------------------------------------------------------------------------------------------------------
-// DGL specific, build-specific fallback resize
-
-void puglFallbackOnResize(PuglView* const view, const uint width, const uint height)
-{
-  #ifdef DGL_OPENGL
-   #if defined(DGL_USE_OPENGL3)
-    glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
-   #else
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(0.0, static_cast<GLdouble>(width), static_cast<GLdouble>(height), 0.0, 0.0, 1.0);
-    glViewport(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height));
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-   #endif
-  #else
-    // unused
-    (void)view;
-    (void)width;
-    (void)height;
   #endif
 }
 

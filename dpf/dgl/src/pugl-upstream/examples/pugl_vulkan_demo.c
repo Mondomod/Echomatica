@@ -9,8 +9,7 @@
   pugl_vulkan_cpp_demo.cpp.
 */
 
-#include "demo_utils.h"
-
+#include <puglutil/demo_utils.h>
 #include <puglutil/test_utils.h>
 
 #include <pugl/pugl.h>
@@ -561,9 +560,8 @@ configureSurface(VulkanState* const vk)
 
   free(presentModes);
   vk->presentMode = presentMode;
-  printf("Using present mode:          \"%s\" (%u)\n",
-         presentModeString(presentMode),
-         presentMode);
+  printf("Using present mode:          \"%s\"\n",
+         presentModeString(presentMode));
 
   return VK_SUCCESS;
 }
@@ -1109,7 +1107,7 @@ main(int argc, char** argv)
     puglUpdate(app.world, -1.0);
 
     if (app.opts.continuous) {
-      puglPrintFps(app.world, &fpsPrinter, &app.framesDrawn);
+      puglPrintFps(puglGetTime(app.world), &fpsPrinter, &app.framesDrawn);
     }
   }
 

@@ -1,6 +1,6 @@
 /*
  * DISTRHO Plugin Framework (DPF)
- * Copyright (C) 2012-2022 Filipe Coelho <falktx@falktx.com>
+ * Copyright (C) 2012-2026 Filipe Coelho <falktx@falktx.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any purpose with
  * or without fee is hereby granted, provided that the above copyright notice and this
@@ -239,7 +239,7 @@ public:
 
     void lv2_activate()
     {
-#if DISTRHO_PLUGIN_WANT_TIMEPOS
+       #if DISTRHO_PLUGIN_WANT_TIMEPOS
         fTimePosition.clear();
 
         // hosts may not send all values, resulting on some invalid data, let's reset everything
@@ -251,7 +251,10 @@ public:
         fTimePosition.bbt.beatType     = 4;
         fTimePosition.bbt.ticksPerBeat = 1920.0;
         fTimePosition.bbt.beatsPerMinute = 120.0;
-#endif
+       #endif
+       #ifdef DISTRHO_PLUGIN_LICENSED_FOR_MOD
+        fRunCount = 0;
+       #endif
         fPlugin.activate();
     }
 
@@ -614,6 +617,11 @@ public:
                 fLastControlValues[i] = curValue;
 
                 fPlugin.setParameterValue(i, curValue);
+
+               #ifdef DISTRHO_PLUGIN_LICENSED_FOR_MOD
+                if (fPlugin.getParameterDesignation(i) == kParameterDesignationReset)
+                    fRunCount = 0;
+               #endif
             }
         }
 

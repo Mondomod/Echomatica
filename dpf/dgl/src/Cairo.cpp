@@ -1,7 +1,7 @@
 /*
  * DISTRHO Plugin Framework (DPF)
- * Copyright (C) 2012-2025 Filipe Coelho <falktx@falktx.com>
  * Copyright (C) 2019-2021 Jean Pierre Cimalando <jp-dev@inbox.ru>
+ * Copyright (C) 2012-2026 Filipe Coelho <falktx@falktx.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any purpose with
  * or without fee is hereby granted, provided that the above copyright notice and this
@@ -93,20 +93,13 @@ void Line<T>::draw(const GraphicsContext& context, const T width)
     cairo_stroke(handle);
 }
 
-#ifdef DGL_ALLOW_DEPRECATED_METHODS
+#if DGL_ALLOW_DEPRECATED_METHODS
 template<typename T>
 void Line<T>::draw()
 {
     notImplemented("Line::draw");
 }
 #endif
-
-template class Line<double>;
-template class Line<float>;
-template class Line<int>;
-template class Line<uint>;
-template class Line<short>;
-template class Line<ushort>;
 
 // -----------------------------------------------------------------------
 // Circle
@@ -169,7 +162,7 @@ void Circle<T>::drawOutline(const GraphicsContext& context, const T lineWidth)
     drawCircle<T>(handle, fPos, fNumSegments, fSize, fSin, fCos, true);
 }
 
-#ifdef DGL_ALLOW_DEPRECATED_METHODS
+#if DGL_ALLOW_DEPRECATED_METHODS
 template<typename T>
 void Circle<T>::draw()
 {
@@ -182,13 +175,6 @@ void Circle<T>::drawOutline()
     notImplemented("Circle::drawOutline");
 }
 #endif
-
-template class Circle<double>;
-template class Circle<float>;
-template class Circle<int>;
-template class Circle<uint>;
-template class Circle<short>;
-template class Circle<ushort>;
 
 // -----------------------------------------------------------------------
 // Triangle
@@ -232,7 +218,7 @@ void Triangle<T>::drawOutline(const GraphicsContext& context, const T lineWidth)
     drawTriangle<T>(handle, pos1, pos2, pos3, true);
 }
 
-#ifdef DGL_ALLOW_DEPRECATED_METHODS
+#if DGL_ALLOW_DEPRECATED_METHODS
 template<typename T>
 void Triangle<T>::draw()
 {
@@ -245,13 +231,6 @@ void Triangle<T>::drawOutline()
     notImplemented("Triangle::drawOutline");
 }
 #endif
-
-template class Triangle<double>;
-template class Triangle<float>;
-template class Triangle<int>;
-template class Triangle<uint>;
-template class Triangle<short>;
-template class Triangle<ushort>;
 
 // -----------------------------------------------------------------------
 // Rectangle
@@ -289,7 +268,7 @@ void Rectangle<T>::drawOutline(const GraphicsContext& context, const T lineWidth
     drawRectangle(handle, *this, true);
 }
 
-#ifdef DGL_ALLOW_DEPRECATED_METHODS
+#if DGL_ALLOW_DEPRECATED_METHODS
 template<typename T>
 void Rectangle<T>::draw()
 {
@@ -302,13 +281,6 @@ void Rectangle<T>::drawOutline()
     notImplemented("Rectangle::drawOutline");
 }
 #endif
-
-template class Rectangle<double>;
-template class Rectangle<float>;
-template class Rectangle<int>;
-template class Rectangle<uint>;
-template class Rectangle<short>;
-template class Rectangle<ushort>;
 
 // -----------------------------------------------------------------------
 // CairoImage
@@ -874,6 +846,38 @@ void Window::PrivateData::startContext()
 void Window::PrivateData::endContext()
 {
 }
+
+// --------------------------------------------------------------------------------------------------------------------
+
+#ifndef DGL_GEOMETRY_CPP_INCLUDED
+template class Line<double>;
+template class Line<float>;
+template class Line<int>;
+template class Line<uint>;
+template class Line<short>;
+template class Line<ushort>;
+
+template class Circle<double>;
+template class Circle<float>;
+template class Circle<int>;
+template class Circle<uint>;
+template class Circle<short>;
+template class Circle<ushort>;
+
+template class Triangle<double>;
+template class Triangle<float>;
+template class Triangle<int>;
+template class Triangle<uint>;
+template class Triangle<short>;
+template class Triangle<ushort>;
+
+template class Rectangle<double>;
+template class Rectangle<float>;
+template class Rectangle<int>;
+template class Rectangle<uint>;
+template class Rectangle<short>;
+template class Rectangle<ushort>;
+#endif
 
 // --------------------------------------------------------------------------------------------------------------------
 

@@ -1,6 +1,6 @@
 /*
  * DISTRHO Plugin Framework (DPF)
- * Copyright (C) 2012-2021 Filipe Coelho <falktx@falktx.com>
+ * Copyright (C) 2012-2026 Filipe Coelho <falktx@falktx.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any purpose with
  * or without fee is hereby granted, provided that the above copyright notice and this
@@ -35,10 +35,14 @@ class SendNoteExampleUI : public UI
 {
 public:
     SendNoteExampleUI()
-        : UI(64*12+8, 64+8),
+        : UI(),
           fLastKey(-1)
     {
         std::memset(fKeyState, 0, sizeof(fKeyState));
+
+        // set minimum UI size
+        const double scaleFactor = getScaleFactor();
+        setGeometryConstraints(DISTRHO_UI_DEFAULT_WIDTH * scaleFactor, DISTRHO_UI_DEFAULT_HEIGHT * scaleFactor, true);
     }
 
 protected:

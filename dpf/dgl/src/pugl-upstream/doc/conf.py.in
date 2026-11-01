@@ -1,10 +1,10 @@
-# Copyright 2020-2023 David Robillard <d@drobilla.net>
+# Copyright 2020-2025 David Robillard <d@drobilla.net>
 # SPDX-License-Identifier: 0BSD OR ISC
 
 # Project information
 
 project = "Pugl"
-copyright = "2023, David Robillard"
+copyright = "2025, David Robillard"
 author = "David Robillard"
 release = "@PUGL_VERSION@"
 
@@ -34,25 +34,19 @@ _opaque = [
     "uintptr_t",
 ]
 
-_c_nitpick_ignore = map(lambda x: ("c:identifier", x), _opaque)
-_cpp_nitpick_ignore = map(lambda x: ("cpp:identifier", x), _opaque)
-nitpick_ignore = list(_c_nitpick_ignore) + list(_cpp_nitpick_ignore)
-
-# C++
-
-cpp_index_common_prefix = ["pugl::"]
+nitpick_ignore = list(map(lambda x: ("c:identifier", x), _opaque))
 
 # HTML output
 
 html_copy_source = False
 html_short_title = "Pugl"
-html_static_path = ["../_static"]
+html_static_path = ["_static"]
 html_theme = "sphinx_lv2_theme"
 
-if tags.has('singlehtml'):
+if tags.has("singlehtml"):
     html_sidebars = {
         "**": [
-        "globaltoc.html",
+            "globaltoc.html",
         ]
     }
 

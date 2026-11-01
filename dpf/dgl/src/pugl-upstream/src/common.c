@@ -43,15 +43,14 @@ PuglWorld*
 puglNewWorld(PuglWorldType type, PuglWorldFlags flags)
 {
   PuglWorld* world = (PuglWorld*)calloc(1, sizeof(PuglWorld));
-  if (!world || !(world->impl = puglInitWorldInternals(type, flags))) {
+  if (!world || !(world->impl = puglInitWorldInternals(type, flags)) ||
+      puglSetString(&world->strings[PUGL_CLASS_NAME], "Pugl")) {
     free(world);
     return NULL;
   }
 
   world->startTime = puglGetTime(world);
   world->type      = type;
-
-  puglSetString(&world->strings[PUGL_CLASS_NAME], "Pugl");
 
   return world;
 }
@@ -70,12 +69,12 @@ puglFreeWorld(PuglWorld* const world)
 }
 
 void
-puglSetWorldHandle(PuglWorld* world, PuglWorldHandle handle)
+puglSetWorldHandle(PuglWorld* const world, void* const handle)
 {
   world->handle = handle;
 }
 
-PuglWorldHandle
+void*
 puglGetWorldHandle(PuglWorld* world)
 {
   return world->handle;
@@ -90,8 +89,7 @@ puglSetWorldString(PuglWorld* const     world,
     return PUGL_BAD_PARAMETER;
   }
 
-  puglSetString(&world->strings[key], value);
-  return PUGL_SUCCESS;
+  return puglSetString(&world->strings[key], value);
 }
 
 const char*
@@ -202,12 +200,12 @@ puglGetWorld(PuglView* view)
 }
 
 void
-puglSetHandle(PuglView* view, PuglHandle handle)
+puglSetHandle(PuglView* const view, void* const handle)
 {
   view->handle = handle;
 }
 
-PuglHandle
+void*
 puglGetHandle(PuglView* view)
 {
   return view->handle;
@@ -277,8 +275,8 @@ puglSetViewString(PuglView* const      view,
     return PUGL_BAD_PARAMETER;
   }
 
-  puglSetString(&view->strings[key], value);
-  return puglViewStringChanged(view, key, view->strings[key]);
+  const PuglStatus st = puglSetString(&view->strings[key], value);
+  return st ? st : puglApplyViewString(view, key, view->strings[key]);
 }
 
 const char*

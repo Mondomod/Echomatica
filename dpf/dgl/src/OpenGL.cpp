@@ -1,6 +1,6 @@
 /*
  * DISTRHO Plugin Framework (DPF)
- * Copyright (C) 2012-2025 Filipe Coelho <falktx@falktx.com>
+ * Copyright (C) 2012-2026 Filipe Coelho <falktx@falktx.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any purpose with
  * or without fee is hereby granted, provided that the above copyright notice and this
@@ -125,7 +125,7 @@ OpenGLImage& OpenGLImage::operator=(const OpenGLImage& image) noexcept
     return *this;
 }
 
-#ifdef DGL_ALLOW_DEPRECATED_METHODS
+#if DGL_ALLOW_DEPRECATED_METHODS
 OpenGLImage::OpenGLImage(const char* const rdata, const uint w, const uint h, const GLenum fmt)
     : ImageBase(rdata, w, h, asDISTRHOImageFormat(fmt)),
       setupCalled(false),
@@ -171,7 +171,7 @@ void SubWidget::PrivateData::display(const uint width, const uint height, const 
         const int w = static_cast<int>(self->getWidth());
         const int h = static_cast<int>(self->getHeight());
 
-        if (d_isNotZero(viewportScaleFactor) && d_isNotEqual(viewportScaleFactor, 1.0))
+        if (d_isNotZero(viewportScaleFactor) && d_isNotEqual<double>(viewportScaleFactor, 1.0))
         {
             glViewport(x,
                        -d_roundToIntPositive(height * viewportScaleFactor - height + absolutePos.getY()),

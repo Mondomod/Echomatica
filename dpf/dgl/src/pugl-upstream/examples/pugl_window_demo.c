@@ -1,4 +1,4 @@
-// Copyright 2012-2020 David Robillard <d@drobilla.net>
+// Copyright 2012-2025 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
 /*
@@ -6,8 +6,8 @@
 */
 
 #include "cube_view.h"
-#include "demo_utils.h"
 
+#include <puglutil/demo_utils.h>
 #include <puglutil/test_utils.h>
 
 #include <pugl/gl.h>
@@ -40,24 +40,26 @@ typedef struct {
 static const uint8_t pad = 64U;
 
 static void
-onDisplay(PuglView* view)
+onExpose(PuglView* view)
 {
   PuglWorld*   world = puglGetWorld(view);
   PuglTestApp* app   = (PuglTestApp*)puglGetWorldHandle(world);
   CubeView*    cube  = (CubeView*)puglGetHandle(view);
 
-  const double thisTime = puglGetTime(app->world);
   if (app->continuous) {
-    const double dTime = thisTime - cube->lastDrawTime;
+    const double thisTime = puglGetTime(app->world);
+    const double dTime    = thisTime - cube->lastDrawTime;
 
     cube->xAngle = fmod(cube->xAngle + (dTime * 100.0), 360.0);
     cube->yAngle = fmod(cube->yAngle + (dTime * 100.0), 360.0);
+
+    cube->lastDrawTime = thisTime;
   }
 
+  const PuglArea size = puglGetSizeHint(view, PUGL_CURRENT_SIZE);
+  reshapeCube(size.width, size.height);
   displayCube(
     view, cube->dist, (float)cube->xAngle, (float)cube->yAngle, cube->entered);
-
-  cube->lastDrawTime = thisTime;
 }
 
 static void
@@ -112,16 +114,13 @@ onEvent(PuglView* view, const PuglEvent* event)
   printEvent(event, prefix, app->verbose);
 
   switch (event->type) {
-  case PUGL_CONFIGURE:
-    reshapeCube((float)event->configure.width, (float)event->configure.height);
-    break;
   case PUGL_UPDATE:
     if (app->continuous) {
       puglObscureView(view);
     }
     break;
   case PUGL_EXPOSE:
-    onDisplay(view);
+    onExpose(view);
     break;
   case PUGL_CLOSE:
     app->quit = 1;
@@ -226,7 +225,7 @@ main(int argc, char** argv)
     ++framesDrawn;
 
     if (app.continuous) {
-      puglPrintFps(app.world, &fpsPrinter, &framesDrawn);
+      puglPrintFps(puglGetTime(app.world), &fpsPrinter, &framesDrawn);
     }
   }
 

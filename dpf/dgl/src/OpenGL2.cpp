@@ -1,6 +1,6 @@
 /*
  * DISTRHO Plugin Framework (DPF)
- * Copyright (C) 2012-2025 Filipe Coelho <falktx@falktx.com>
+ * Copyright (C) 2012-2026 Filipe Coelho <falktx@falktx.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any purpose with
  * or without fee is hereby granted, provided that the above copyright notice and this
@@ -93,20 +93,13 @@ void Line<T>::draw(const GraphicsContext&, const T width)
     drawLine<T>(posStart, posEnd);
 }
 
-#ifdef DGL_ALLOW_DEPRECATED_METHODS
+#if DGL_ALLOW_DEPRECATED_METHODS
 template<typename T>
 void Line<T>::draw()
 {
     drawLine<T>(posStart, posEnd);
 }
 #endif
-
-template class Line<double>;
-template class Line<float>;
-template class Line<int>;
-template class Line<uint>;
-template class Line<short>;
-template class Line<ushort>;
 
 // --------------------------------------------------------------------------------------------------------------------
 // Circle
@@ -168,7 +161,7 @@ void Circle<T>::drawOutline(const GraphicsContext& context, const T lineWidth)
     drawCircle<T>(context, fPos, fNumSegments, fSize, fSin, fCos, true);
 }
 
-#ifdef DGL_ALLOW_DEPRECATED_METHODS
+#if DGL_ALLOW_DEPRECATED_METHODS
 template<typename T>
 void Circle<T>::draw()
 {
@@ -181,13 +174,6 @@ void Circle<T>::drawOutline()
     drawCircle<T>(fPos, fNumSegments, fSize, fSin, fCos, true);
 }
 #endif
-
-template class Circle<double>;
-template class Circle<float>;
-template class Circle<int>;
-template class Circle<uint>;
-template class Circle<short>;
-template class Circle<ushort>;
 
 // --------------------------------------------------------------------------------------------------------------------
 // Triangle
@@ -236,7 +222,7 @@ void Triangle<T>::drawOutline(const GraphicsContext&, const T lineWidth)
     drawTriangle<T>(pos1, pos2, pos3, true);
 }
 
-#ifdef DGL_ALLOW_DEPRECATED_METHODS
+#if DGL_ALLOW_DEPRECATED_METHODS
 template<typename T>
 void Triangle<T>::draw()
 {
@@ -249,13 +235,6 @@ void Triangle<T>::drawOutline()
     drawTriangle<T>(pos1, pos2, pos3, true);
 }
 #endif
-
-template class Triangle<double>;
-template class Triangle<float>;
-template class Triangle<int>;
-template class Triangle<uint>;
-template class Triangle<short>;
-template class Triangle<ushort>;
 
 // --------------------------------------------------------------------------------------------------------------------
 // Rectangle
@@ -290,13 +269,13 @@ static void drawRectangle(const Rectangle<T>& rect, const bool outline)
 }
 
 template<typename T>
-void Rectangle<T>::draw(const GraphicsContext& context)
+void Rectangle<T>::draw(const GraphicsContext&)
 {
     drawRectangle<T>(*this, false);
 }
 
 template<typename T>
-void Rectangle<T>::drawOutline(const GraphicsContext& context, const T lineWidth)
+void Rectangle<T>::drawOutline(const GraphicsContext&, const T lineWidth)
 {
     DISTRHO_SAFE_ASSERT_RETURN(lineWidth != 0,);
 
@@ -304,7 +283,7 @@ void Rectangle<T>::drawOutline(const GraphicsContext& context, const T lineWidth
     drawRectangle<T>(*this, true);
 }
 
-#ifdef DGL_ALLOW_DEPRECATED_METHODS
+#if DGL_ALLOW_DEPRECATED_METHODS
 template<typename T>
 void Rectangle<T>::draw()
 {
@@ -317,13 +296,6 @@ void Rectangle<T>::drawOutline()
     drawRectangle<T>(*this, true);
 }
 #endif
-
-template class Rectangle<double>;
-template class Rectangle<float>;
-template class Rectangle<int>;
-template class Rectangle<uint>;
-template class Rectangle<short>;
-template class Rectangle<ushort>;
 
 // --------------------------------------------------------------------------------------------------------------------
 // OpenGLImage
@@ -408,7 +380,7 @@ void OpenGLImage::drawAt(const GraphicsContext&, const Point<int>& pos)
     drawOpenGLImage(*this, pos, textureId, setupCalled);
 }
 
-#ifdef DGL_ALLOW_DEPRECATED_METHODS
+#if DGL_ALLOW_DEPRECATED_METHODS
 void OpenGLImage::draw()
 {
     drawOpenGLImage(*this, Point<int>(0, 0), textureId, setupCalled);
@@ -559,11 +531,61 @@ void Window::PrivateData::destroyContext()
 
 void Window::PrivateData::startContext()
 {
+    const PuglArea size = puglGetSizeHint(view, PUGL_CURRENT_SIZE);
+
+    glViewport(0, 0, static_cast<GLsizei>(size.width), static_cast<GLsizei>(size.height));
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0.0,
+            static_cast<GLdouble>(size.width) / autoScaleFactor,
+            static_cast<GLdouble>(size.height) / autoScaleFactor,
+            0.0,
+            0.0,
+            1.0);
+    glViewport(0, 0, static_cast<GLsizei>(size.width), static_cast<GLsizei>(size.height));
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    glColor4f(1.f, 1.f, 1.f, 1.f);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void Window::PrivateData::endContext()
 {
 }
+
+// --------------------------------------------------------------------------------------------------------------------
+
+#ifndef DGL_GEOMETRY_CPP_INCLUDED
+template class Line<double>;
+template class Line<float>;
+template class Line<int>;
+template class Line<uint>;
+template class Line<short>;
+template class Line<ushort>;
+
+template class Circle<double>;
+template class Circle<float>;
+template class Circle<int>;
+template class Circle<uint>;
+template class Circle<short>;
+template class Circle<ushort>;
+
+template class Triangle<double>;
+template class Triangle<float>;
+template class Triangle<int>;
+template class Triangle<uint>;
+template class Triangle<short>;
+template class Triangle<ushort>;
+
+template class Rectangle<double>;
+template class Rectangle<float>;
+template class Rectangle<int>;
+template class Rectangle<uint>;
+template class Rectangle<short>;
+template class Rectangle<ushort>;
+#endif
 
 // --------------------------------------------------------------------------------------------------------------------
 

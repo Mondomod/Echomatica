@@ -1,6 +1,6 @@
 /*
  * DISTRHO Plugin Framework (DPF)
- * Copyright (C) 2012-2024 Filipe Coelho <falktx@falktx.com>
+ * Copyright (C) 2012-2025 Filipe Coelho <falktx@falktx.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any purpose with
  * or without fee is hereby granted, provided that the above copyright notice and this
@@ -15,15 +15,9 @@
  */
 
 #include "tests.hpp"
-
-#define DPF_TEST_POINT_CPP
-#define DPF_TEST_WINDOW_CPP
-#include "dgl/src/pugl.cpp"
-#include "dgl/src/Application.cpp"
-#include "dgl/src/ApplicationPrivateData.cpp"
-#include "dgl/src/Geometry.cpp"
-#include "dgl/src/Window.cpp"
-#include "dgl/src/WindowPrivateData.cpp"
+#include "dgl.cpp"
+#include "dgl/src/EventHandlers.cpp"
+#include "dgl/src/ImageBase.cpp"
 
 // --------------------------------------------------------------------------------------------------------------------
 

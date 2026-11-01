@@ -1,4 +1,4 @@
-// Copyright 2012-2023 David Robillard <d@drobilla.net>
+// Copyright 2012-2025 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
 /*
@@ -23,13 +23,13 @@
 
 #define PUGL_NO_INCLUDE_GL_H
 
-#include "demo_utils.h"
-#include "file_utils.h"
-#include "rects.h"
 #include "shader_utils.h"
 
 #include "glad/glad.h"
 
+#include <puglutil/demo_utils.h>
+#include <puglutil/file_utils.h>
+#include <puglutil/rects.h>
 #include <puglutil/test_utils.h>
 
 #include <pugl/gl.h>
@@ -67,6 +67,7 @@ typedef struct {
   double          lastFrameEndTime;
   double          mouseX;
   double          mouseY;
+  PuglArea        size;
   unsigned        framesDrawn;
   int             quit;
 } PuglTestApp;
@@ -78,7 +79,7 @@ static void
 teardownGl(PuglTestApp* app);
 
 static void
-onConfigure(PuglView* view, PuglSpan width, PuglSpan height)
+beginFrame(PuglView* view, PuglSpan width, PuglSpan height)
 {
   (void)view;
 
@@ -86,22 +87,21 @@ onConfigure(PuglView* view, PuglSpan width, PuglSpan height)
   glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
   glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD);
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-  glViewport(0, 0, (int)width, (int)height);
+  glViewport(0, 0, width, height);
 }
 
 static void
 onExpose(PuglView* view)
 {
-  PuglTestApp*   app    = (PuglTestApp*)puglGetHandle(view);
-  const PuglArea size   = puglGetSizeHint(view, PUGL_CURRENT_SIZE);
-  const float    width  = (float)size.width;
-  const float    height = (float)size.height;
-  const double   time   = puglGetTime(puglGetWorld(view));
+  PuglTestApp*   app  = (PuglTestApp*)puglGetHandle(view);
+  const PuglArea size = app->size;
+  const double   time = puglGetTime(puglGetWorld(view));
+
+  beginFrame(view, size.width, size.height);
 
   // Construct projection matrix for 2D window surface (in pixels)
   mat4 proj;
-  mat4Ortho(
-    proj, 0.0f, (float)size.width, 0.0f, (float)size.height, -1.0f, 1.0f);
+  mat4Ortho(proj, 0.0f, size.width, 0.0f, size.height, -1.0f, 1.0f);
 
   // Clear and bind everything that is the same for every rect
   glClear(GL_COLOR_BUFFER_BIT);
@@ -131,7 +131,7 @@ onExpose(PuglView* view)
   mouseV->fillColor[3] = 0.5f;
 
   for (size_t i = 0; i < app->numRects; ++i) {
-    moveRect(&app->rects[i], i, app->numRects, width, height, time);
+    moveRect(&app->rects[i], i, app->numRects, size.width, size.height, time);
   }
 
   glBufferData(GL_UNIFORM_BUFFER, sizeof(proj), &proj, GL_STREAM_DRAW);
@@ -168,7 +168,8 @@ onEvent(PuglView* view, const PuglEvent* event)
     teardownGl(app);
     break;
   case PUGL_CONFIGURE:
-    onConfigure(view, event->configure.width, event->configure.height);
+    app->size.width  = event->configure.width;
+    app->size.height = event->configure.height;
     break;
   case PUGL_UPDATE:
     puglObscureView(view);
@@ -222,16 +223,13 @@ makeRects(const size_t numRects)
 static char*
 loadShader(const char* const programPath, const char* const name)
 {
-  char* const path = resourcePath(programPath, name);
-  fprintf(stderr, "Loading shader %s\n", path);
-
-  FILE* const file = fopen(path, "rb");
+  fprintf(stderr, "Loading shader %s\n", name);
+  FILE* const file = resourceFile(programPath, PUGL_DATA_DIR, name);
   if (!file) {
-    logError("Failed to open '%s'\n", path);
+    logError("Failed to open '%s'\n", name);
     return NULL;
   }
 
-  free(path);
   fseek(file, 0, SEEK_END);
   const long filePos = ftell(file);
   if (filePos <= 0) {
@@ -513,7 +511,7 @@ main(int argc, char** argv)
   PuglFpsPrinter fpsPrinter = {startTime};
   while (!app.quit) {
     puglUpdate(app.world, updateTimeout(&app));
-    puglPrintFps(app.world, &fpsPrinter, &app.framesDrawn);
+    puglPrintFps(puglGetTime(app.world), &fpsPrinter, &app.framesDrawn);
   }
 
   // Destroy window (which will send a PUGL_UNREALIZE event)

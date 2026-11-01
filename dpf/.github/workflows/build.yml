@@ -13,7 +13,6 @@ jobs:
     strategy:
       matrix:
         os:
-          - macos-13
           - macos-14
           - macos-15
           # webgui failure
@@ -22,7 +21,7 @@ jobs:
           - ubuntu-24.04
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       with:
         submodules: recursive
     - name: Set up dependencies
@@ -42,6 +41,14 @@ jobs:
       env:
         CFLAGS: -Werror
         CXXFLAGS: -Werror
+      run: |
+        make clean >/dev/null
+        make -j ${{ env.JOBS }}
+    - name: Without any warnings + -fsingle-precision-constant
+      if: ${{ runner.os == 'Linux' }}
+      env:
+        CFLAGS: -Werror -fsingle-precision-constant
+        CXXFLAGS: -Werror -fsingle-precision-constant
       run: |
         make clean >/dev/null
         make -j ${{ env.JOBS }}
@@ -81,6 +88,13 @@ jobs:
       env:
         CFLAGS: -Werror
         CXXFLAGS: -Werror -std=gnu++20
+      run: |
+        make clean >/dev/null
+        make -j ${{ env.JOBS }}
+    - name: No deprecated methods allowed
+      env:
+        CFLAGS: -Werror
+        CXXFLAGS: -Werror -DDGL_ALLOW_DEPRECATED_METHODS=0
       run: |
         make clean >/dev/null
         make -j ${{ env.JOBS }}

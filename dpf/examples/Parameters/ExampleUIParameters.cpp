@@ -1,6 +1,6 @@
 /*
  * DISTRHO Plugin Framework (DPF)
- * Copyright (C) 2012-2021 Filipe Coelho <falktx@falktx.com>
+ * Copyright (C) 2012-2026 Filipe Coelho <falktx@falktx.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any purpose with
  * or without fee is hereby granted, provided that the above copyright notice and this
@@ -33,7 +33,7 @@ class ExampleUIParameters : public UI
 public:
     /* constructor */
     ExampleUIParameters()
-        : UI(DISTRHO_UI_DEFAULT_WIDTH, DISTRHO_UI_DEFAULT_HEIGHT)
+        : UI()
     {
        /**
           Initialize all our parameters to their defaults.
@@ -41,8 +41,9 @@ public:
         */
         std::memset(fParamGrid, 0, sizeof(bool)*9);
 
-        // TODO explain why this is here
-        setGeometryConstraints(128, 128, true, false);
+        // set minimum UI size
+        const double scaleFactor = getScaleFactor();
+        setGeometryConstraints(DISTRHO_UI_DEFAULT_WIDTH * scaleFactor, DISTRHO_UI_DEFAULT_HEIGHT * scaleFactor, true);
     }
 
 protected:

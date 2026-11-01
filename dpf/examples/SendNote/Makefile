@@ -22,15 +22,13 @@ FILES_UI  = \
 # --------------------------------------------------------------
 # Do some magic
 
+UI_TYPE = generic
 include ../../Makefile.plugins.mk
 
 # --------------------------------------------------------------
 # Enable all possible plugin types
 
-ifeq ($(HAVE_OPENGL),true)
 TARGETS += jack
-endif
-
 TARGETS += lv2_sep
 TARGETS += vst2
 TARGETS += vst3

@@ -5,17 +5,15 @@
 test_c_args = []
 if get_option('warning_level') == 'everything'
   if cc.get_id() == 'clang'
-    test_c_args += [
-      '-Wno-float-equal',
-    ]
+    test_c_args += ['-Wno-float-equal']
   elif cc.get_id() == 'gcc'
-    test_c_args += [
-      '-Wno-float-equal',
-    ]
+    test_c_args += ['-Wno-float-equal']
   endif
 
   test_c_args = cc.get_supported_arguments(test_c_args)
 endif
+
+test_c_args += c_suppressions
 
 # Check licensing metadata
 if not meson.is_subproject() and get_option('lint')
@@ -44,19 +42,16 @@ basic_tests = [
 
 cairo_tests = ['cairo']
 
-gl_tests = [
-  'gl',
-  'gl_free_unrealized',
-  'gl_hints',
-]
+gl_tests = ['gl', 'gl_free_unrealized', 'gl_hints']
 
 vulkan_tests = ['vulkan']
 
-if with_timers
+if platform != 'x11' or use_xsync
   basic_exclusive_tests += ['local_copy_paste', 'remote_copy_paste']
   basic_tests += ['timer']
 endif
 
+# Basic tests that only need a stub backend
 foreach test : basic_tests
   test(
     test,
@@ -64,13 +59,14 @@ foreach test : basic_tests
       'test_' + test,
       'test_@0@.c'.format(test),
       c_args: test_c_args,
-      dependencies: [pugl_dep, pugl_stub_dep, puglutil_dep],
+      dependencies: [m_dep, pugl_dep, pugl_stub_dep, puglutil_dep],
       implicit_include_directories: false,
     ),
     suite: 'unit',
   )
 endforeach
 
+# Basic tests that only need a stub backend and must be run sequentially
 foreach test : basic_exclusive_tests
   test(
     test,
@@ -86,6 +82,7 @@ foreach test : basic_exclusive_tests
   )
 endforeach
 
+# Tests that need an OpenGL backend
 if opengl_dep.found()
   foreach test : gl_tests
     test(
@@ -93,7 +90,7 @@ if opengl_dep.found()
       executable(
         'test_' + test,
         'test_@0@.c'.format(test),
-        c_args: test_c_args,
+        c_args: test_c_args + opengl_args,
         dependencies: [pugl_dep, pugl_gl_dep, puglutil_dep],
         implicit_include_directories: false,
       ),
@@ -102,6 +99,7 @@ if opengl_dep.found()
   endforeach
 endif
 
+# Tests that need a Cairo backend
 if cairo_dep.found()
   foreach test : cairo_tests
     test(
@@ -118,6 +116,7 @@ if cairo_dep.found()
   endforeach
 endif
 
+# Tests that need a Vulkan backend
 if vulkan_dep.found()
   foreach test : vulkan_tests
     test(
@@ -139,11 +138,3 @@ endif
 ###################
 
 subdir('headers')
-
-#######################
-# C++ / Objective C++ #
-#######################
-
-if is_variable('cpp')
-  subdir('cpp')
-endif

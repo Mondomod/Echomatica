@@ -312,7 +312,8 @@ puglRealize(PuglView* view)
 
   // Set basic window hints and attributes
 
-  puglSetViewString(view, PUGL_WINDOW_TITLE, view->strings[PUGL_WINDOW_TITLE]);
+  puglApplyViewString(
+    view, PUGL_WINDOW_TITLE, view->strings[PUGL_WINDOW_TITLE]);
   puglSetTransientParent(view, view->transientParent);
 
   impl->scaleFactor = puglWinGetViewScaleFactor(view);
@@ -708,27 +709,27 @@ constrainAspect(const PuglView* const view,
 
   switch (wParam) {
   case WMSZ_TOP:
-    size->top = (a < minA   ? (LONG)((float)size->bottom - w * minA)
-                 : a > maxA ? (LONG)((float)size->bottom - w * maxA)
+    size->top = (a < minA   ? (LONG)((float)size->bottom - (w * minA))
+                 : a > maxA ? (LONG)((float)size->bottom - (w * maxA))
                             : size->top);
     break;
   case WMSZ_TOPRIGHT:
   case WMSZ_RIGHT:
   case WMSZ_BOTTOMRIGHT:
-    size->right = (a < minA   ? (LONG)((float)size->left + h * minA)
-                   : a > maxA ? (LONG)((float)size->left + h * maxA)
+    size->right = (a < minA   ? (LONG)((float)size->left + (h * minA))
+                   : a > maxA ? (LONG)((float)size->left + (h * maxA))
                               : size->right);
     break;
   case WMSZ_BOTTOM:
-    size->bottom = (a < minA   ? (LONG)((float)size->top + w * minA)
-                    : a > maxA ? (LONG)((float)size->top + w * maxA)
+    size->bottom = (a < minA   ? (LONG)((float)size->top + (w * minA))
+                    : a > maxA ? (LONG)((float)size->top + (w * maxA))
                                : size->bottom);
     break;
   case WMSZ_BOTTOMLEFT:
   case WMSZ_LEFT:
   case WMSZ_TOPLEFT:
-    size->left = (a < minA   ? (LONG)((float)size->right - h * minA)
-                  : a > maxA ? (LONG)((float)size->right - h * maxA)
+    size->left = (a < minA   ? (LONG)((float)size->right - (h * minA))
+                  : a > maxA ? (LONG)((float)size->right - (h * maxA))
                              : size->left);
     break;
   }
@@ -1032,15 +1033,9 @@ puglSetViewStyle(PuglView* const view, const PuglViewStyleFlags flags)
   return PUGL_SUCCESS;
 }
 
-PuglStatus
+PUGL_CONST_FUNC PuglStatus
 puglApplySizeHint(PuglView* const    PUGL_UNUSED(view),
                   const PuglSizeHint PUGL_UNUSED(hint))
-{
-  return PUGL_SUCCESS;
-}
-
-PuglStatus
-puglUpdateSizeHints(PuglView* const PUGL_UNUSED(view))
 {
   return PUGL_SUCCESS;
 }
@@ -1093,7 +1088,8 @@ puglDispatchViewEvents(PuglView* view)
 
   long markTime = 0;
   MSG  msg;
-  while (PeekMessage(&msg, view->impl->hwnd, 0, 0, PM_REMOVE)) {
+  HWND hwnd = view->world->type == PUGL_PROGRAM ? NULL : view->impl->hwnd;
+  while (PeekMessage(&msg, hwnd, 0, 0, PM_REMOVE)) {
     if (msg.message == PUGL_LOCAL_MARK_MSG) {
       markTime = GetMessageTime();
     } else {
@@ -1193,7 +1189,7 @@ puglGetTime(const PuglWorld* world)
 {
   LARGE_INTEGER count;
   QueryPerformanceCounter(&count);
-  return ((double)count.QuadPart / world->impl->timerFrequency -
+  return (((double)count.QuadPart / world->impl->timerFrequency) -
           world->startTime);
 }
 
@@ -1230,15 +1226,15 @@ puglObscureRegion(PuglView* const view,
 }
 
 PuglNativeView
-puglGetNativeView(PuglView* view)
+puglGetNativeView(const PuglView* view)
 {
   return (PuglNativeView)view->impl->hwnd;
 }
 
 PuglStatus
-puglViewStringChanged(PuglView* const      view,
-                      const PuglStringHint key,
-                      const char* const    value)
+puglApplyViewString(PuglView* const      view,
+                    const PuglStringHint key,
+                    const char* const    value)
 {
   PuglStatus st = PUGL_SUCCESS;
   if (!view->impl->hwnd) {
@@ -1635,9 +1631,11 @@ puglWinConfigure(PuglView* view)
 PuglStatus
 puglWinEnter(PuglView* view, const PuglExposeEvent* expose)
 {
-  return expose
-           ? puglWinStatus(!!BeginPaint(view->impl->hwnd, &view->impl->paint))
-           : PUGL_SUCCESS;
+  if (expose) {
+    return puglWinStatus(!!BeginPaint(view->impl->hwnd, &view->impl->paint));
+  }
+
+  return PUGL_SUCCESS;
 }
 
 PuglStatus
