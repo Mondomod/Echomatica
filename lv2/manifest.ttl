@@ -8,7 +8,10 @@
     rdfs:seeAlso <Echomatica_dsp.ttl>, <modgui.ttl> .
 
 
-
+<AlmostaVerb.ttl>
+	lv2:appliesTo <urn:hvcc:Echomatica> ;
+	a pset:Preset ;
+	rdfs:seeAlso <AlmostaVerb.ttl> .
 <Apache.ttl>
 	lv2:appliesTo <urn:hvcc:Echomatica> ;
 	a pset:Preset ;
@@ -69,6 +72,10 @@
 	lv2:appliesTo <urn:hvcc:Echomatica> ;
 	a pset:Preset ;
 	rdfs:seeAlso <Rise_Fall_of_Flingel_Bunt.ttl> .
+<Slappy.ttl>
+	lv2:appliesTo <urn:hvcc:Echomatica> ;
+	a pset:Preset ;
+	rdfs:seeAlso <Slappy.ttl> .
 <Sleepwalk.ttl>
 	lv2:appliesTo <urn:hvcc:Echomatica> ;
 	a pset:Preset ;
