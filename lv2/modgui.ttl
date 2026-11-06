@@ -11,6 +11,7 @@
         modgui:screenshot <modgui/screenshot-echomatica.png> ;
         modgui:thumbnail <modgui/thumbnail-echomatica.png> ;
 	 modgui:javascript <modgui/headmode.js> ;
+     modgui:documentation <modgui/echomatica_user_manual.pdf> ;
         modgui:brand "MondoMatic" ;
         modgui:label "Echomatica" ;
         modgui:model "panel" ;
